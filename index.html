@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unidad 1 · Mi primera web con HTML · 3.º ESO Computación y Robótica</title>
+<style>
+:root{
+  --bg:#f5f7fb; --panel:#ffffff; --ink:#1c2333; --muted:#5b6478; --line:#e3e7ef;
+  --pri:#4f46e5; --pri2:#eef0ff; --ok:#059669; --okbg:#e7f8f1; --bad:#dc2626; --badbg:#fdecec;
+  --warn:#b45309; --warnbg:#fff6e5; --code:#0f172a; --codeink:#e2e8f0;
+  --h:#f472b6; --c-tag:#7dd3fc; --c-attr:#fcd34d; --c-str:#86efac; --c-com:#94a3b8;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Ubuntu,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;font-size:16px}
+a{color:var(--pri)}
+code,pre,textarea.code{font-family:ui-monospace,"DejaVu Sans Mono",Consolas,Menlo,monospace}
+
+/* ---------- layout ---------- */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:10px 18px;background:#111827;color:#fff}
+.top .logo{font-weight:800;letter-spacing:.3px;font-size:1.05rem;display:flex;align-items:center;gap:8px}
+.top .logo b{color:#a5b4fc;font-family:ui-monospace,monospace}
+.top .grow{flex:1}
+.bar{width:180px;height:10px;border-radius:99px;background:#374151;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#a5b4fc,#f472b6);transition:width .4s}
+.top small{color:#cbd5e1}
+.menu-btn{display:none;background:none;border:1px solid #4b5563;color:#fff;border-radius:8px;padding:4px 10px;font-size:1.1rem;cursor:pointer}
+.wrap{display:flex;min-height:calc(100vh - 52px)}
+nav.side{width:250px;flex:none;background:var(--panel);border-right:1px solid var(--line);padding:14px 10px;position:sticky;top:52px;height:calc(100vh - 52px);overflow:auto}
+nav.side .grp{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 10px 6px}
+nav.side button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:0;background:none;padding:8px 10px;border-radius:10px;font:inherit;font-size:.95rem;color:var(--ink);cursor:pointer}
+nav.side button:hover{background:var(--pri2)}
+nav.side button.on{background:var(--pri);color:#fff}
+nav.side button .tick{margin-left:auto;font-size:.8rem;opacity:0}
+nav.side button.done .tick{opacity:1}
+main{flex:1;min-width:0;padding:26px clamp(14px,3vw,40px) 60px;max-width:1100px}
+section.sec{display:none;animation:fade .25s}
+section.sec.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+h1{font-size:clamp(1.6rem,3vw,2.2rem);margin:.2em 0 .3em;line-height:1.2}
+h2{font-size:1.35rem;margin:1.6em 0 .5em}
+h3{font-size:1.08rem;margin:1.2em 0 .4em}
+.lead{font-size:1.08rem;color:var(--muted);max-width:760px}
+.kicker{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--pri);background:var(--pri2);padding:3px 10px;border-radius:99px}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin:14px 0}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.grid .card{margin:0}
+.emoji{font-size:1.8rem;line-height:1}
+.tip{border-left:5px solid var(--pri);background:var(--pri2);padding:12px 16px;border-radius:10px;margin:14px 0}
+.warn{border-left:5px solid var(--warn);background:var(--warnbg);padding:12px 16px;border-radius:10px;margin:14px 0}
+.okbox{border-left:5px solid var(--ok);background:var(--okbg);padding:12px 16px;border-radius:10px;margin:14px 0}
+.hand{border:2px dashed #a78bfa;background:#faf7ff;padding:14px 18px;border-radius:12px;margin:14px 0}
+.hand b.tag{background:#7c3aed;color:#fff;padding:2px 8px;border-radius:6px;font-size:.8rem;margin-right:6px}
+
+.btn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:10px;padding:8px 14px;font:inherit;font-size:.92rem;font-weight:600;cursor:pointer;background:var(--pri);color:#fff}
+.btn:hover{filter:brightness(1.1)}
+.btn.ghost{background:var(--panel);color:var(--pri);border:1px solid #c7cbf5}
+.btn.small{padding:5px 10px;font-size:.82rem}
+.btn.green{background:var(--ok)}
+.done-btn{margin-top:22px}
+
+/* ---------- code ---------- */
+.snip{margin:12px 0;border-radius:12px;overflow:hidden;border:1px solid #1e293b}
+.snip .bar2{display:flex;align-items:center;gap:8px;background:#1e293b;color:#cbd5e1;padding:6px 10px;font-size:.8rem}
+.snip .bar2 .dots{display:flex;gap:5px}
+.snip .bar2 .dots i{width:10px;height:10px;border-radius:50%;background:#f87171;display:block}
+.snip .bar2 .dots i:nth-child(2){background:#fbbf24}.snip .bar2 .dots i:nth-child(3){background:#34d399}
+.snip .bar2 .name{flex:1}
+.snip pre{margin:0;background:var(--code);color:var(--codeink);padding:14px 16px;overflow:auto;font-size:.9rem;line-height:1.6}
+.snip .bar2 button{background:#334155;color:#fff;border:0;border-radius:7px;padding:4px 10px;font:inherit;font-size:.78rem;cursor:pointer}
+.snip .bar2 button:hover{background:#4f46e5}
+.t{color:var(--c-tag)} .a{color:var(--c-attr)} .s{color:var(--c-str)} .c{color:var(--c-com);font-style:italic} .p{color:#64748b}
+code.inl{background:#eef0ff;color:#3730a3;padding:1px 6px;border-radius:6px;font-size:.9em}
+
+.demo{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:stretch}
+.demo iframe{width:100%;min-height:160px;border:1px solid var(--line);border-radius:12px;background:#fff}
+@media (max-width:860px){.demo{grid-template-columns:1fr}}
+
+/* ---------- interactive bits ---------- */
+.url{font-family:ui-monospace,monospace;font-size:clamp(.85rem,2vw,1.15rem);background:#0f172a;color:#fff;padding:16px;border-radius:12px;overflow:auto;white-space:nowrap}
+.url span{cursor:pointer;padding:2px 1px;border-radius:5px;border-bottom:3px solid transparent;transition:.2s}
+.url span:hover,.url span.sel{background:#1e293b}
+.url .u1{color:#f472b6;border-color:#f472b6}.url .u2{color:#fbbf24;border-color:#fbbf24}.url .u3{color:#34d399;border-color:#34d399}
+.url .u4{color:#60a5fa;border-color:#60a5fa}.url .u5{color:#c084fc;border-color:#c084fc}.url .u6{color:#fb923c;border-color:#fb923c}.url .u7{color:#a3e635;border-color:#a3e635}
+#urlInfo{min-height:60px}
+
+.flow{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.flow div{flex:1 1 150px;background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:12px;text-align:center;transition:.3s;font-size:.92rem}
+.flow div .emoji{display:block;margin-bottom:6px}
+.flow div.lit{border-color:var(--pri);background:var(--pri2);transform:translateY(-4px);box-shadow:0 8px 18px rgba(79,70,229,.18)}
+
+.mock{border:2px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;max-width:620px}
+.mock > div{padding:16px;cursor:pointer;transition:.2s;border-bottom:1px dashed var(--line);position:relative}
+.mock > div:hover{filter:brightness(.96)}
+.mock .mh{background:#dbeafe}.mock .mn{background:#e0e7ff;padding:8px 16px}.mock .mb{background:#fff;min-height:150px}.mock .mf{background:#fce7f3}
+.mock .lbl{position:absolute;right:10px;top:8px;font-size:.72rem;font-weight:700;background:#111827;color:#fff;padding:2px 8px;border-radius:99px}
+.mock .fake{height:10px;background:#e5e7eb;border-radius:6px;margin:8px 0}
+.mock .fake.w60{width:60%}.mock .fake.w80{width:80%}.mock .fake.w40{width:40%}
+#mockInfo{min-height:70px}
+
+.lang{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.lang .card{margin:0;border-top:6px solid var(--pri)}
+.lang .old{opacity:.75;border-top-color:#9ca3af}
+
+.steps{counter-reset:st;list-style:none;padding:0;margin:10px 0}
+.steps li{counter-increment:st;position:relative;padding:12px 14px 12px 58px;margin:10px 0;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.steps li::before{content:counter(st);position:absolute;left:14px;top:12px;width:32px;height:32px;border-radius:50%;background:var(--pri);color:#fff;font-weight:800;display:grid;place-items:center}
+kbd{background:#fff;border:1px solid #cbd5e1;border-bottom-width:3px;border-radius:6px;padding:1px 7px;font-family:ui-monospace,monospace;font-size:.85em}
+
+.vsc{background:#1e1e1e;color:#d4d4d4;border-radius:12px;overflow:hidden;font-size:.85rem;display:grid;grid-template-columns:44px 190px 1fr;min-height:200px;margin:12px 0}
+.vsc .act{background:#333;display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:12px;font-size:1.1rem}
+.vsc .exp{background:#252526;padding:10px}
+.vsc .exp div{padding:2px 6px;border-radius:4px}
+.vsc .exp .selx{background:#37373d}
+.vsc .ed{padding:10px 14px;font-family:ui-monospace,monospace;white-space:pre;overflow:auto}
+@media (max-width:700px){.vsc{grid-template-columns:36px 1fr}.vsc .exp{display:none}}
+
+/* lab */
+.lab{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lab textarea{width:100%;height:440px;resize:vertical;background:var(--code);color:var(--codeink);border:0;border-radius:12px;padding:14px;font-size:.92rem;line-height:1.55;tab-size:2}
+.lab iframe{width:100%;height:440px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.labtools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+select,input[type=text]{font:inherit;padding:7px 10px;border-radius:10px;border:1px solid var(--line);background:#fff}
+#labTargetWrap{display:none;margin-top:12px}
+#labTargetWrap iframe{width:100%;height:360px;border:3px dashed #f472b6;border-radius:12px;background:#fff}
+@media (max-width:900px){.lab{grid-template-columns:1fr}}
+
+/* retos */
+.reto-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.pill{font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;background:#fce7f3;color:#9d174d}
+.target{width:100%;height:420px;border:3px dashed #f472b6;border-radius:14px;background:#fff}
+.checklist label{display:flex;gap:10px;align-items:flex-start;padding:7px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+.checklist input{margin-top:5px;transform:scale(1.2)}
+.hints li{margin:6px 0}
+.hints li.hidden{display:none}
+
+/* chuleta */
+table.cheat{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;font-size:.93rem}
+table.cheat th{background:#111827;color:#fff;text-align:left;padding:9px 12px}
+table.cheat td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+table.cheat tr:nth-child(even) td{background:#fafbff}
+table.cheat td:first-child{white-space:nowrap}
+
+/* errores */
+.err{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.err .snip{margin:0}
+.err .bad .bar2{background:#7f1d1d}.err .good .bar2{background:#065f46}
+@media (max-width:760px){.err{grid-template-columns:1fr}}
+
+/* quiz */
+.q{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+.q p{margin:0 0 8px;font-weight:600}
+.q label{display:block;padding:7px 10px;border-radius:9px;cursor:pointer;border:1px solid transparent}
+.q label:hover{background:var(--pri2)}
+.q.right{border-color:var(--ok);background:var(--okbg)}
+.q.wrong{border-color:var(--bad);background:var(--badbg)}
+.q .exp{display:none;margin-top:8px;font-size:.92rem;color:var(--muted)}
+.q.right .exp,.q.wrong .exp{display:block}
+.result{display:none;text-align:center;padding:22px;border-radius:16px;background:linear-gradient(135deg,#4f46e5,#db2777);color:#fff;margin:18px 0}
+.result .big{font-size:3rem;font-weight:900;line-height:1.1}
+
+/* inicio */
+.hero{background:linear-gradient(135deg,#111827 0%,#312e81 60%,#831843 100%);color:#fff;border-radius:20px;padding:28px clamp(18px,4vw,40px);position:relative;overflow:hidden}
+.hero h1{color:#fff}
+.hero p{color:#e0e7ff;max-width:640px}
+.hero pre{position:absolute;right:20px;bottom:10px;opacity:.18;font-size:.9rem;margin:0;color:#fff}
+@media (max-width:760px){.hero pre{display:none}}
+.mission{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));margin-top:18px}
+.mission .card{margin:0;cursor:pointer}
+.mission .card:hover{border-color:var(--pri)}
+
+/* ficha */
+.ficha .line{border-bottom:1px solid #9ca3af;height:30px}
+.ficha .urlbox{font-family:ui-monospace,monospace;font-size:1.05rem;border:1.5px dashed #6b7280;border-radius:8px;padding:14px;margin:8px 0 60px;text-align:center}
+.ficha .box{border:1.5px solid #6b7280;height:230px;border-radius:8px;margin-top:6px}
+.ficha .fq{margin:16px 0;break-inside:avoid}
+.ficha .fhead{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;margin-bottom:12px}
+.ficha .fhead div{border-bottom:1px solid #6b7280;padding-bottom:2px;font-size:.9rem}
+
+footer.credit{margin-top:40px;font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(30px);background:#111827;color:#fff;padding:10px 18px;border-radius:99px;font-size:.9rem;opacity:0;transition:.3s;z-index:99;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:820px){
+  .menu-btn{display:block}
+  nav.side{position:fixed;left:0;top:52px;z-index:30;transform:translateX(-105%);transition:.25s;box-shadow:4px 0 20px rgba(0,0,0,.15)}
+  nav.side.open{transform:none}
+  .bar{width:90px}
+}
+
+
+/* modo individual / pareja */
+.modebox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}
+.seg{display:inline-flex;background:#eef0f6;border-radius:12px;padding:4px;gap:4px}
+.seg button{border:0;background:none;font:inherit;font-weight:700;padding:8px 16px;border-radius:9px;cursor:pointer;color:var(--muted)}
+.seg button.on{background:var(--pri);color:#fff;box-shadow:0 2px 6px rgba(79,70,229,.3)}
+.pairpanel{display:none;margin-top:12px}
+.pair .pairpanel{display:block}
+.pair-only{display:none!important}
+.pair .pair-only{display:flex!important}
+.pair .pair-only.blk{display:block!important}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.roles div{border:2px solid var(--line);border-radius:12px;padding:10px 12px;transition:.3s}
+.roles div.now{border-color:var(--pri);background:var(--pri2)}
+.roles input{width:100%;margin-top:6px}
+.timer{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:8px}
+.timer .clock{font-family:ui-monospace,monospace;font-size:1.6rem;font-weight:800;min-width:90px}
+.flash{animation:flash .5s 6 alternate}
+@keyframes flash{from{background:#fef08a}to{background:var(--panel)}}
+@media (max-width:640px){.roles{grid-template-columns:1fr}}
+
+
+/* test práctica / examen */
+.tabsel{margin:6px 0 14px}
+.pstats{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.stat{background:#f3f4f8;border-radius:99px;padding:5px 12px;font-size:.92rem}
+.qmeta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.chip{font-size:.74rem;font-weight:700;background:var(--pri);color:#fff;border-radius:99px;padding:2px 9px}
+.chip.ghost{background:var(--pri2);color:var(--pri)}
+pre.qcode{background:var(--code);color:var(--codeink);padding:10px 14px;border-radius:10px;margin:6px 0 10px;overflow:auto;font-size:.9rem}
+.opt{display:flex!important;gap:8px;align-items:center}
+.opt.good{background:var(--okbg);border-color:var(--ok)!important;font-weight:600}
+.opt.bad{background:var(--badbg);border-color:var(--bad)!important}
+.mini{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-family:"Times New Roman",serif;font-size:1rem;min-width:140px}
+.mini ul,.mini ol{margin:0;padding-left:22px}
+.pbtns{display:flex}
+.ebar{position:sticky;top:0;z-index:25;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;background:#111827;color:#fff;padding:10px 16px;border-radius:12px;margin-bottom:10px}
+.eclock{font-family:ui-monospace,monospace;font-size:1.2rem}
+.eclock.hurry{color:#fca5a5;animation:flash 1s infinite alternate}
+body.exam .top,body.exam nav.side,body.exam footer.credit,body.exam #tTabs,body.exam #s-test > .kicker,body.exam #s-test > h1{display:none!important}
+body.exam .wrap{min-height:100vh}
+body.exam main{max-width:900px;margin:0 auto}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin:8px 0}
+.vgrid label{display:flex;flex-direction:column;font-size:.85rem;gap:3px}
+.vgrid input{width:100%}
+.outs{margin-top:8px;font-weight:700}.outs.warnout{background:#fde68a;color:#78350f;display:inline-block;padding:3px 12px;border-radius:99px}
+.vcode{margin-top:10px;font-family:ui-monospace,monospace;font-size:1.05rem;background:#0003;display:inline-block;padding:4px 14px;border-radius:8px}
+
+/* imprimir solo la ficha */
+@media print{
+  body.print-ficha .top, body.print-ficha nav.side, body.print-ficha .noprint, body.print-ficha footer.credit{display:none!important}
+  body.print-ficha section.sec{display:none!important}
+  body.print-ficha section#s-ficha{display:block!important}
+  body.print-ficha main{padding:0;max-width:none}
+  body.print-ficha{background:#fff;font-size:12pt}
+  body.print-ficha .card{border:0;padding:0}
+  body.pf-1 #ficha2, body.pf-2 #ficha1{display:none!important}
+  body.print-ficha:not(.pf-1):not(.pf-2) #ficha1{break-after:page}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <button class="menu-btn" id="menuBtn" aria-label="Menú">☰</button>
+  <div class="logo">🌐 <span>Mi primera web</span> <b>&lt;html&gt;</b></div>
+  <div class="grow"></div>
+  <small id="progTxt">0 %</small>
+  <div class="bar" title="Tu progreso"><i id="progBar"></i></div>
+</header>
+
+<div class="wrap">
+<nav class="side" id="side">
+  <button data-go="inicio">🏠 Inicio</button>
+  <div class="grp">Teoría</div>
+  <button data-go="internet">🛰️ 1. Internet y servidores <span class="tick">✅</span></button>
+  <button data-go="estructura">🧱 2. Partes de una web <span class="tick">✅</span></button>
+  <button data-go="lenguajes">🧠 3. Lenguajes y herramientas <span class="tick">✅</span></button>
+  <div class="grp">Manos al código</div>
+  <button data-go="vscode">💻 4. Empezar con VS Code <span class="tick">✅</span></button>
+  <button data-go="esqueleto">🦴 5. El esqueleto HTML <span class="tick">✅</span></button>
+  <button data-go="formato">🎨 6. Dar formato al texto <span class="tick">✅</span></button>
+  <button data-go="mas">🔗 7. Listas, enlaces, imágenes y tablas <span class="tick">✅</span></button>
+  <button data-go="lab">🧪 Laboratorio</button>
+  <div class="grp">Retos</div>
+  <button data-go="reto4">🚀 Reto 4 · Mi primera página <span class="tick">✅</span></button>
+  <button data-go="reto5">🌍 Reto 5 · Internet <span class="tick">✅</span></button>
+  <button data-go="reto6">🗺️ Reto 6 · Países <span class="tick">✅</span></button>
+  <div class="grp">Ayuda</div>
+  <button data-go="chuleta">📋 Chuleta de etiquetas</button>
+  <button data-go="errores">🐞 Errores típicos</button>
+  <button data-go="test">📝 Test: práctica y examen <span class="tick">✅</span></button>
+  <button data-go="ficha">✍️ Fichas a mano (Sets 1 y 2)</button>
+</nav>
+
+<main>
+
+<!-- ================= INICIO ================= -->
+<section class="sec" id="s-inicio">
+  <div class="hero">
+    <span class="kicker" style="background:#fff2;color:#fff">Unidad 1 · 3.º ESO</span>
+    <h1>Crea tu primera página web… escribiendo tú cada línea</h1>
+    <p>Todas las webs que usas a diario (YouTube, Instagram, la del instituto) se construyen con el mismo lenguaje: <b>HTML</b>. En esta unidad vas a aprender a escribirlo en <b>Visual Studio Code</b>, el mismo editor que usan los programadores profesionales.</p>
+    <p>Hasta ahora programabas con bloques. Ahora toca dar el salto al <b>código de texto</b>.</p>
+    <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;h1&gt;¡Hola!&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+  </div>
+
+  <h2>Tu misión</h2>
+  <div class="mission">
+    <div class="card" data-go="internet"><div class="emoji">🛰️</div><h3>1 · Entender</h3>Cómo viaja una web desde un servidor hasta tu pantalla.</div>
+    <div class="card" data-go="vscode"><div class="emoji">💻</div><h3>2 · Preparar</h3>Tu carpeta de trabajo y tu primer archivo en VS Code.</div>
+    <div class="card" data-go="esqueleto"><div class="emoji">🧩</div><h3>3 · Aprender</h3>Las etiquetas: cópialas, pruébalas y entiende qué hacen.</div>
+    <div class="card" data-go="reto4"><div class="emoji">🏆</div><h3>4 · Superar los retos</h3>Replica tres páginas reales: 4, 5 y 6.</div>
+  </div>
+
+  <div class="tip"><b>¿Cómo se usa esta app?</b> Lee cada apartado, prueba el código en el <b>🧪 Laboratorio</b> y después escríbelo tú en VS Code. Al terminar cada apartado, pulsa <b>«Marcar como completado»</b> y la barra de arriba avanzará.</div>
+  <div class="warn">☁️ <b>Tu trabajo se guarda en Google Drive</b>, no en el ordenador del instituto, porque allí se puede borrar. Al empezar la clase <b>descargas</b> tus archivos y al terminar los <b>vuelves a subir</b>. Lo tienes explicado en <a href="#vscode">💻 Empezar con VS Code</a>.</div>
+  <div class="hand"><b class="tag">✍️ A MANO</b> Las actividades de los <b>Sets 1 y 2</b> se hacen <b>en el cuaderno</b>. Escribir a mano te ayuda a memorizar y a mejorar tu letra. Tienes las fichas para imprimir en <a href="#ficha">✍️ Fichas a mano</a>.</div>
+</section>
+
+<!-- ================= 1 INTERNET ================= -->
+<section class="sec" id="s-internet" data-track>
+  <span class="kicker">Teoría · Repaso del Set 1</span>
+  <h1>🛰️ Internet y servidores web</h1>
+  <p class="lead">Una <b>página web</b> es un documento escrito en HTML que está guardado en un ordenador llamado <b>servidor</b>. Cuando la pides, viaja por Internet hasta tu <b>navegador</b>, que la «dibuja» en pantalla.</p>
+
+  <div class="grid">
+    <div class="card"><div class="emoji">📄</div><h3>Página web</h3>Es un <b>documento</b> escrito en HTML que puede tener texto, imágenes, vídeos y <b>enlaces</b> a otras páginas. Se ve con un <b>navegador</b>.</div>
+    <div class="card"><div class="emoji">📚</div><h3>Sitio web</h3>Es un <b>conjunto de páginas</b> web enlazadas entre sí, con un mismo dominio. Por ejemplo, la web de tu instituto tiene muchas páginas.</div>
+    <div class="card"><div class="emoji">🖥️</div><h3>Servidor web</h3>Es un <b>ordenador</b> (y el programa que lleva dentro) que <b>guarda páginas web</b> y las <b>envía</b> a quien las pide. Está encendido las 24 horas y conectado a Internet.</div>
+    <div class="card"><div class="emoji">🧰</div><h3>¿Para qué se usan?</h3>Para <b>alojar webs</b>, tiendas online, blogs, plataformas como Moodle o Classroom, <b>guardar archivos</b> en la nube, servir vídeos y juegos online…</div>
+  </div>
+
+  <h2>¿Qué pasa cuando escribes una dirección?</h2>
+  <p>Pulsa el botón y fíjate en los pasos:</p>
+  <div class="flow" id="flow">
+    <div><span class="emoji">⌨️</span><b>1. Escribes la URL</b><br>en el navegador</div>
+    <div><span class="emoji">📒</span><b>2. DNS</b><br>traduce el nombre a una dirección IP (como una agenda de teléfonos)</div>
+    <div><span class="emoji">📨</span><b>3. Petición HTTP</b><br>tu navegador le pide la página al servidor</div>
+    <div><span class="emoji">🖥️</span><b>4. El servidor responde</b><br>y envía el archivo HTML, las imágenes…</div>
+    <div><span class="emoji">🎨</span><b>5. El navegador dibuja</b><br>la página que ves</div>
+  </div>
+  <button class="btn" id="flowBtn">▶ Simular el viaje</button>
+
+  <h2>¿Qué es una dirección IP?</h2>
+  <p class="lead">Cada aparato conectado a Internet (tu móvil, este ordenador, el servidor de YouTube…) tiene un <b>número que lo identifica</b>: su <b>dirección IP</b> (IP viene de <i>Internet Protocol</i>). Gracias a ese número, la información sabe a qué aparato tiene que llegar.</p>
+  <div class="grid">
+    <div class="card"><div class="emoji">🏠</div><h3>Como la dirección de tu casa</h3>Para que te llegue un paquete hace falta tu dirección. En Internet pasa lo mismo: sin IP, los datos no saben adónde ir.</div>
+    <div class="card"><div class="emoji">🔢</div><h3>Cómo es (IPv4)</h3>Son <b>4 números del 0 al 255</b> separados por puntos.<br><code class="inl">192.168.1.25</code><br>Hay unos 4.300 millones de combinaciones… ¡y ya no llegan para todos los aparatos del mundo!</div>
+    <div class="card"><div class="emoji">🧬</div><h3>La versión nueva (IPv6)</h3>Es mucho más larga, con letras y números:<br><code class="inl" style="word-break:break-all">2001:db8:85a3::8a2e:370:7334</code><br>Da direcciones para billones de aparatos.</div>
+    <div class="card"><div class="emoji">🌍</div><h3>Pública y privada</h3>La <b>IP pública</b> es la que te ve Internet (la de tu router o la del instituto). La <b>IP privada</b> es la que tiene cada aparato dentro de tu casa o de tu clase, y suele empezar por <code class="inl">192.168…</code></div>
+  </div>
+  <h3>📒 El DNS: la agenda de contactos de Internet</h3>
+  <p>A las personas se nos dan mal los números, así que usamos <b>nombres</b> (dominios). El <b>DNS</b> traduce el nombre a la IP, igual que la agenda de tu móvil traduce «Mamá» en un número de teléfono. Elige una web:</p>
+  <div class="card" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+    <select id="dnsPick">
+      <option value="">🌐 Elige un dominio…</option>
+      <option value="142.250.200.68">www.google.com</option>
+      <option value="208.80.154.224">es.wikipedia.org</option>
+      <option value="157.240.5.35">www.instagram.com</option>
+      <option value="192.168.1.25">mi-ordenador (en la red del aula)</option>
+    </select>
+    <span style="font-size:1.4rem">➡️</span>
+    <code class="inl" id="dnsOut" style="font-size:1.1rem">¿IP?</code>
+  </div>
+  <p style="font-size:.88rem;color:var(--muted)">* Son IP de ejemplo: las webs grandes tienen muchos servidores y su IP cambia según desde dónde te conectes.</p>
+  <div class="tip">🕵️ <b>Curiosidad y seguridad:</b> cada web que visitas ve tu IP pública y, con ella, sabe más o menos desde qué <b>ciudad</b> te conectas. Por eso se dice que en Internet nunca eres totalmente anónimo.</div>
+
+  <h2>Las partes de una URL</h2>
+  <p>Una <b>URL</b> (<i>Uniform Resource Locator</i>, localizador uniforme de recursos) es la <b>dirección exacta</b> de una página, imagen o archivo en Internet. <b>Haz clic en cada color</b>:</p>
+  <div class="url" id="url">
+    <span class="u1" data-i="0">https</span>://<span class="u2" data-i="1">www</span>.<span class="u3" data-i="2">ejemplo.es</span>/<span class="u4" data-i="3">clase/3eso/</span><span class="u5" data-i="4">index.html</span><span class="u6" data-i="5">?tema=html</span><span class="u7" data-i="6">#inicio</span>
+  </div>
+  <div class="card" id="urlInfo">👆 Elige una parte de la URL.</div>
+
+  <h2>Tipos de servidores web</h2>
+  <p>No todas las webs se guardan igual. Depende de cuántas visitas tengan y del dinero que quieran gastar:</p>
+  <div class="grid">
+    <div class="card"><div class="emoji">🏢</div><h3>Compartido</h3>Muchas webs pequeñas viven en el <b>mismo</b> ordenador y se reparten sus recursos. Es barato o incluso gratis. <i>Ejemplo: un blog personal.</i></div>
+    <div class="card"><div class="emoji">🧩</div><h3>VPS (servidor privado virtual)</h3>Un servidor físico se divide en varios «servidores virtuales». Cada uno tiene su parte reservada.</div>
+    <div class="card"><div class="emoji">🏰</div><h3>Dedicado</h3>Un ordenador entero <b>solo para tu web</b>. Es potente, pero caro. <i>Ejemplo: una tienda online grande.</i></div>
+    <div class="card"><div class="emoji">☁️</div><h3>En la nube</h3>Muchos servidores trabajan juntos y crecen si hay más visitas. <i>Ejemplo: Netflix o YouTube.</i></div>
+    <div class="card"><div class="emoji">🏠</div><h3>Local</h3>Tu propio ordenador. Solo tú ves la página. <b>Así vamos a trabajar en clase.</b></div>
+  </div>
+
+  <h2>Más palabras clave</h2>
+  <div class="grid">
+    <div class="card"><b>HTTP / HTTPS</b><br>Es el «idioma» que usan el navegador y el servidor para hablar. La <b>S</b> significa «seguro»: los datos viajan cifrados 🔒.</div>
+    <div class="card"><b>Cookies 🍪</b><br>Pequeños archivos que una web guarda en tu navegador para recordarte: tu sesión, tu idioma, lo que hay en tu carrito… ¡y también para saber qué te interesa!</div>
+    <div class="card"><b>Otros protocolos</b><br><code class="inl">FTP</code> (subir archivos), <code class="inl">SMTP</code> (enviar correos), <code class="inl">DNS</code> (traducir nombres a direcciones IP)…</div>
+  </div>
+  <div class="hand"><b class="tag">✍️ A MANO</b> Responde en el cuaderno a las actividades del <b>Set 1</b>. Tienes la ficha en <a href="#ficha">✍️ Fichas a mano</a>.</div>
+  <button class="btn green done-btn" data-done="internet">✔ Marcar como completado</button>
+</section>
+
+<!-- ================= 2 ESTRUCTURA ================= -->
+<section class="sec" id="s-estructura" data-track>
+  <span class="kicker">Teoría · Set 2</span>
+  <h1>🧱 Las partes de una página web</h1>
+  <p class="lead">Casi todas las webs se organizan igual, como un libro: una portada arriba, el contenido en medio y unas notas al final. <b>Haz clic en cada zona</b> del dibujo:</p>
+  <div class="demo">
+    <div class="mock" id="mock">
+      <div class="mh" data-m="0"><span class="lbl">header</span><b>🌐 LOGO</b> &nbsp; Nombre de la web</div>
+      <div class="mn" data-m="1"><span class="lbl">nav</span>Inicio · Noticias · Contacto</div>
+      <div class="mb" data-m="2"><span class="lbl">body / main</span><b>Título del artículo</b><div class="fake w80"></div><div class="fake"></div><div class="fake w60"></div><div class="fake w40"></div></div>
+      <div class="mf" data-m="3"><span class="lbl">footer</span><small>© 2026 · Aviso legal · Redes sociales</small></div>
+    </div>
+    <div class="card" id="mockInfo" style="margin:0">👈 Elige una zona de la página.</div>
+  </div>
+
+  <div class="hand"><b class="tag">✍️ A MANO</b> Responde en el cuaderno a las actividades 1, 2 y 3 del Set 2: define <b>cabecera</b>, <b>cuerpo</b> y <b>pie</b>, y escribe qué suele contener cada parte. Hazlo <b>con tus propias palabras</b>. Después, dibuja el esquema de una web que uses mucho y marca sus tres partes.</div>
+
+  <div class="tip">🔎 <b>Detective web:</b> abre la web de tu equipo, de tu videojuego o de tu youtuber favorito y busca su cabecera, su menú, su cuerpo y su pie. ¿Están todas las partes?</div>
+  <button class="btn green done-btn" data-done="estructura">✔ Marcar como completado</button>
+</section>
+
+<!-- ================= 3 LENGUAJES ================= -->
+<section class="sec" id="s-lenguajes" data-track>
+  <span class="kicker">Teoría · Set 2</span>
+  <h1>🧠 Lenguajes y herramientas web</h1>
+  <p class="lead">Piensa en una web como en un <b>cuerpo humano</b>: <b>HTML</b> es el esqueleto, <b>CSS</b> es la ropa y el aspecto, y <b>JavaScript</b> son los músculos que la hacen moverse.</p>
+  <div class="lang">
+    <div class="card" style="border-top-color:#e34c26"><div class="emoji">🦴</div><h3>HTML</h3><b>Estructura.</b> Dice qué es cada cosa: esto es un título, esto es un párrafo, esto es una imagen.</div>
+    <div class="card" style="border-top-color:#264de4"><div class="emoji">👕</div><h3>CSS</h3><b>Aspecto.</b> Colores, tipos de letra, tamaños, posiciones y animaciones. <i>(Lo veremos en el 2.º trimestre).</i></div>
+    <div class="card" style="border-top-color:#f0db4f"><div class="emoji">💪</div><h3>JavaScript</h3><b>Comportamiento.</b> Botones que reaccionan, juegos, relojes, formularios… <i>(2.º trimestre).</i></div>
+    <div class="card" style="border-top-color:#16a34a"><div class="emoji">✨</div><h3>HTML5</h3>La versión actual de HTML. Añade vídeo, audio y etiquetas como <code class="inl">&lt;header&gt;</code> o <code class="inl">&lt;footer&gt;</code>.</div>
+    <div class="card" style="border-top-color:#7c3aed"><div class="emoji">📦</div><h3>XML</h3>No sirve para dibujar páginas, sino para <b>guardar y compartir datos</b> de forma ordenada.</div>
+    <div class="card" style="border-top-color:#0891b2"><div class="emoji">📏</div><h3>XHTML</h3>Un HTML «estricto», con reglas de XML. Si te dejas una etiqueta sin cerrar, falla.</div>
+    <div class="card old"><div class="emoji">🪦</div><h3>Flash</h3>Servía para animaciones y juegos web. Dejó de funcionar en <b>2020</b> por problemas de seguridad. Lo sustituyeron HTML5, CSS y JavaScript.</div>
+  </div>
+
+  <h2>Herramientas del desarrollador web</h2>
+  <div class="grid">
+    <div class="card"><div class="emoji">📝</div><h3>Editores de código</h3><b>Visual Studio Code</b>, Notepad++, Notepadqq, Sublime Text. Escribes el código tú mismo.</div>
+    <div class="card"><div class="emoji">🖱️</div><h3>Editores visuales (WYSIWYG)</h3>«Lo que ves es lo que obtienes»: <b>Google Sites</b>, Wix, WordPress. Arrastras y sueltas.</div>
+    <div class="card"><div class="emoji">🌐</div><h3>Navegadores</h3>Firefox, Chrome, Edge. Muestran la web y traen <b>herramientas de desarrollador</b> (pulsa <kbd>F12</kbd>).</div>
+    <div class="card"><div class="emoji">⚡</div><h3>Editores online</h3><b>CodePen</b>, JSFiddle. Programas en el navegador y ves el resultado al momento.</div>
+    <div class="card"><div class="emoji">🖼️</div><h3>Diseño gráfico</h3><b>Canva</b>, GIMP, Inkscape. Para logos, botones e imágenes.</div>
+    <div class="card"><div class="emoji">📤</div><h3>Subir archivos (FTP)</h3>FileZilla. Sirve para subir tu web al servidor.</div>
+  </div>
+  <div class="tip">🕵️ <b>Pruébalo ahora:</b> en cualquier web, pulsa <kbd>F12</kbd> o haz clic derecho y elige <b>Inspeccionar</b>. ¡Verás su código HTML! Todas las webs del mundo están hechas de etiquetas.</div>
+
+  <div class="hand"><b class="tag">✍️ A MANO</b> Set 2: <b>actividad 4</b>, escribe al menos una herramienta de cada tipo y para qué sirve. <b>Actividad 5</b>, haz un esquema con los lenguajes web y su función. <b>Actividad 6</b> <i>(en el ordenador)</i>: crea en <b>Canva</b> un logo con tu nombre. Lo usarás en tu web.</div>
+  <button class="btn green done-btn" data-done="lenguajes">✔ Marcar como completado</button>
+</section>
+
+<!-- ================= 4 VSCODE ================= -->
+<section class="sec" id="s-vscode" data-track>
+  <span class="kicker">Práctica · Set 3</span>
+  <h1>💻 Empezar con Visual Studio Code</h1>
+  <p class="lead">VS Code es un <b>editor de código</b>: un bloc de notas superpotente que colorea el código, te ayuda a completarlo y avisa de algunos errores.</p>
+
+  <div class="vsc" aria-hidden="true">
+    <div class="act">📄<br>🔍<br>🧩</div>
+    <div class="exp"><b style="font-size:.75rem">EXPLORADOR</b><div>📁 WEB_ANA_GARCIA</div><div class="selx">&nbsp;&nbsp;📄 index.html</div><div>&nbsp;&nbsp;📄 reto5.html</div><div>&nbsp;&nbsp;🖼️ logo.png</div></div>
+    <div class="ed"><span class="p">1</span>  <span class="t">&lt;!DOCTYPE html&gt;</span>
+<span class="p">2</span>  <span class="t">&lt;html</span> <span class="a">lang</span>=<span class="s">"es"</span><span class="t">&gt;</span>
+<span class="p">3</span>  <span class="t">&lt;head&gt;</span>
+<span class="p">4</span>    <span class="t">&lt;meta</span> <span class="a">charset</span>=<span class="s">"utf-8"</span><span class="t">&gt;</span>
+<span class="p">5</span>    <span class="t">&lt;title&gt;</span>Mi web<span class="t">&lt;/title&gt;</span>
+<span class="p">6</span>  <span class="t">&lt;/head&gt;</span></div>
+  </div>
+
+  <div class="warn">☁️ <b>¡Muy importante!</b> En los ordenadores del instituto (EducaAndOS) <b>tus archivos se pueden borrar</b> al apagar o cambiar de equipo. Por eso <b>tu trabajo vive en Google Drive</b>. El ordenador solo lo usamos para editar durante la clase.</div>
+
+  <h2>La idea: Drive ⇄ ordenador</h2>
+  <div class="flow">
+    <div><span class="emoji">☁️</span><b>1. Drive</b><br>aquí se guarda tu trabajo para siempre</div>
+    <div><span class="emoji">⬇️</span><b>2. Descargar</b><br>al empezar la clase</div>
+    <div><span class="emoji">💻</span><b>3. Trabajar</b><br>en VS Code y mirar en Firefox</div>
+    <div><span class="emoji">⬆️</span><b>4. Subir</b><br>a Drive al terminar la clase</div>
+  </div>
+
+  <h2>Primer día: prepara tu carpeta en Drive</h2>
+  <ol class="steps">
+    <li>Entra en <b>Google Drive</b> con tu cuenta del instituto (<code class="inl">@g.educaand.es</code>).</li>
+    <li>Pulsa <b>+ Nuevo → Carpeta nueva</b> y llámala <code class="inl">web_nombre_apellido</code>, <b>sin espacios, tildes ni ñ</b>. Ejemplo: <code class="inl">web_ana_garcia</code>.</li>
+    <li>Sube a esa carpeta tu logo de Canva (<code class="inl">logo.png</code>) y las imágenes que vayas a usar.</li>
+  </ol>
+
+  <h2>Cada clase: paso a paso</h2>
+  <ol class="steps">
+    <li><b>Crea una carpeta de trabajo en el ordenador.</b> En <b>Descargas</b> (o en el Escritorio), crea una carpeta con el <b>mismo nombre</b> que la de Drive: <code class="inl">web_ana_garcia</code>.</li>
+    <li><b>Descarga tus archivos de Drive</b> (si es el primer día y aún no tienes ninguno, sáltate este paso). En Drive, selecciona tus archivos <code class="inl">.html</code> y tus imágenes → clic derecho → <b>Descargar</b>. Después <b>muévelos</b> a tu carpeta de trabajo.<br>📦 Si descargas la <b>carpeta entera</b>, Drive te da un archivo <b>.zip</b>: haz clic derecho sobre él → <b>Extraer aquí</b>.</li>
+    <li><b>Abre VS Code</b> desde el menú de aplicaciones → <i>Programación</i> → <b>Visual Studio Code</b>.</li>
+    <li><b>Abre tu carpeta de trabajo:</b> menú <b>Archivo → Abrir carpeta…</b> y elige <code class="inl">web_ana_garcia</code>. Si te pregunta si confías en los autores, di que <b>sí</b>.</li>
+    <li><b>Crea un archivo nuevo</b> (si lo necesitas): en el explorador de la izquierda, pulsa el icono 📄+ y escribe, por ejemplo, <code class="inl">reto4.html</code>. ¡La extensión <b>.html</b> es obligatoria!</li>
+    <li><b>Truco mágico de Emmet:</b> en el archivo vacío, escribe <kbd>!</kbd> y pulsa <kbd>Tab</kbd> (o <kbd>Enter</kbd>). VS Code escribe el esqueleto HTML entero por ti. Cambia <code class="inl">lang="en"</code> por <code class="inl">lang="es"</code>.</li>
+    <li><b>Guarda siempre:</b> <kbd>Ctrl</kbd> + <kbd>S</kbd>. Si la pestaña tiene un ⚪ punto blanco, es que <b>no</b> has guardado.</li>
+    <li><b>Mira tu página:</b> abre tu carpeta de trabajo y haz doble clic en el <code class="inl">.html</code> (o clic derecho → <i>Abrir con Firefox</i>).</li>
+    <li><b>El ciclo del programador:</b> cambias el código → <kbd>Ctrl</kbd>+<kbd>S</kbd> → en el navegador pulsas <kbd>F5</kbd> para recargar → miras el resultado. ¡Y vuelta a empezar!</li>
+    <li><b>⏰ 5 minutos antes de acabar: SUBE TU TRABAJO A DRIVE.</b> En tu carpeta de Drive pulsa <b>+ Nuevo → Subir archivo</b> y elige tus archivos. Si Drive pregunta qué hacer porque ya existe uno con ese nombre, elige <b>«Reemplazar archivo existente»</b>. Así no se crean copias como <code class="inl">reto4(1).html</code>.</li>
+  </ol>
+  <div class="warn">👀 <b>Ojo:</b> si abres un <code class="inl">.html</code> <b>dentro de Drive</b>, solo verás el código como texto, no la página. Para verla funcionando tienes que <b>descargarlo</b> y abrirlo con Firefox.</div>
+  <div class="tip">🖼️ <b>Imágenes:</b> descarga también tus imágenes y ponlas en la <b>misma carpeta</b> que el <code class="inl">.html</code>. Si no, en tu página saldrán rotas.</div>
+
+  <h2>Atajos que te harán la vida más fácil</h2>
+  <table class="cheat">
+    <tr><th>Atajo</th><th>Qué hace</th></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>Guardar</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td><td>Deshacer (¡tu salvavidas!)</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>Ctrl</kbd>+<kbd>V</kbd></td><td>Copiar / Pegar</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd></td><td>Ordenar (formatear) el código automáticamente</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>/</kbd></td><td>Convertir una línea en comentario</td></tr>
+    <tr><td><kbd>Alt</kbd>+<kbd>Z</kbd></td><td>Ajustar las líneas largas a la ventana</td></tr>
+    <tr><td>Escribir <code class="inl">h1</code> + <kbd>Tab</kbd></td><td>Emmet crea <code class="inl">&lt;h1&gt;&lt;/h1&gt;</code> (funciona con casi todas las etiquetas)</td></tr>
+  </table>
+  <div class="warn">⚠️ <b>Nombres de archivo:</b> usa solo minúsculas, sin espacios, sin tildes y sin ñ. <code class="inl">mi pagina Ñoña.html</code> ❌ &nbsp; <code class="inl">mi_pagina.html</code> ✅</div>
+  <div class="okbox">🎯 <b>Actividad Set 3:</b> crea <code class="inl">ejemplo.html</code> en tu carpeta, copia el código del apartado <a href="#esqueleto">🦴 El esqueleto HTML</a>, guárdalo, ábrelo en el navegador y, al terminar, <b>súbelo a tu carpeta de Drive</b>.</div>
+  <button class="btn green done-btn" data-done="vscode">✔ Marcar como completado</button>
+</section>
+
+<!-- ================= 5 ESQUELETO ================= -->
+<section class="sec" id="s-esqueleto" data-track>
+  <span class="kicker">Código · Set 3</span>
+  <h1>🦴 El esqueleto de toda página HTML</h1>
+  <p class="lead">HTML funciona con <b>etiquetas</b>: palabras entre <code class="inl">&lt; &gt;</code>. Casi todas van en pareja: una <b>abre</b> y otra <b>cierra</b> (la que cierra lleva una barra <code class="inl">/</code>).</p>
+  <div class="snip" data-src="ex-etiqueta" data-name="Así es una etiqueta"></div>
+
+  <p>Este es el esqueleto que tendrán <b>todas</b> tus páginas. <b>Cópialo</b> en VS Code:</p>
+  <div class="snip" data-src="ex-esqueleto" data-name="ejemplo.html" data-try="1"></div>
+
+  <h2>¿Qué significa cada línea?</h2>
+  <table class="cheat">
+    <tr><th>Código</th><th>Para qué sirve</th></tr>
+    <tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td>Avisa al navegador: «esto es HTML5». Va siempre en la <b>primera línea</b>.</td></tr>
+    <tr><td><code>&lt;html lang="es"&gt;</code></td><td>Es la caja que contiene todo. <code>lang="es"</code> indica que la página está en español.</td></tr>
+    <tr><td><code>&lt;head&gt;</code></td><td>La parte «invisible»: información sobre la página que no se ve dentro de ella.</td></tr>
+    <tr><td><code>&lt;meta charset="utf-8"&gt;</code></td><td>Hace que se vean bien las <b>tildes y la ñ</b>. ¡Sin esto verás «EspaÃ±a»!</td></tr>
+    <tr><td><code>&lt;title&gt;</code></td><td>El texto que aparece en la <b>pestaña</b> del navegador.</td></tr>
+    <tr><td><code>&lt;body&gt;</code></td><td>El <b>cuerpo</b>: todo lo que se ve en la página va aquí dentro.</td></tr>
+    <tr><td><code>&lt;!-- ... --&gt;</code></td><td>Un <b>comentario</b>: una nota para ti que el navegador ignora.</td></tr>
+  </table>
+  <div class="tip">🪆 <b>Regla de las muñecas rusas:</b> las etiquetas se cierran en orden inverso al que se abren. Si abres <code class="inl">&lt;b&gt;&lt;i&gt;</code>, cierras <code class="inl">&lt;/i&gt;&lt;/b&gt;</code>.</div>
+  <div class="tip">↹ <b>Sangría:</b> mete hacia dentro (con <kbd>Tab</kbd>) lo que está dentro de otra etiqueta. Así verás de un vistazo qué contiene cada cosa.</div>
+  <button class="btn green done-btn" data-done="esqueleto">✔ Marcar como completado</button>
+</section>
+
+<!-- ================= 6 FORMATO ================= -->
+<section class="sec" id="s-formato" data-track>
+  <span class="kicker">Código · Retos 4-6</span>
+  <h1>🎨 Dar formato al texto</h1>
+  <p class="lead">Recuerda: estas etiquetas van <b>dentro de</b> <code class="inl">&lt;body&gt;</code>. Pulsa <b>🧪 Probar</b> para verlas funcionar en el laboratorio.</p>
+
+  <h2>Títulos: de &lt;h1&gt; a &lt;h6&gt;</h2>
+  <p><code class="inl">h1</code> es el título más grande e importante y <code class="inl">h6</code> el más pequeño. Usa <b>un solo &lt;h1&gt;</b> por página, como el título de un libro.</p>
+  <div class="snip" data-src="ex-titulos" data-name="títulos" data-try="1"></div>
+
+  <h2>Párrafos y saltos de línea</h2>
+  <p>HTML <b>ignora los Enter</b> que pulsas en el código. Para separar bloques de texto usa <code class="inl">&lt;p&gt;</code>, y para bajar de línea dentro de un párrafo, <code class="inl">&lt;br&gt;</code> (esta etiqueta no se cierra).</p>
+  <div class="snip" data-src="ex-parrafos" data-name="párrafos" data-try="1"></div>
+
+  <h2>Negrita, cursiva, subrayado…</h2>
+  <div class="snip" data-src="ex-caracteres" data-name="formato de caracteres" data-try="1"></div>
+  <div class="tip">💡 Hoy en día se prefieren <code class="inl">&lt;strong&gt;</code> (importante) y <code class="inl">&lt;em&gt;</code> (énfasis) en lugar de <code class="inl">&lt;b&gt;</code> e <code class="inl">&lt;i&gt;</code>. Se ven igual, pero tienen más significado, por ejemplo para los lectores de pantalla que usan las personas ciegas.</div>
+
+  <h2>Color, tamaño, letra y alineación con <code>style</code></h2>
+  <p>El atributo <code class="inl">style</code> cambia el aspecto de cualquier etiqueta. Se escribe <b>propiedad: valor;</b> y puedes poner varias propiedades separadas por <b>punto y coma</b>.</p>
+  <div class="snip" data-src="ex-style" data-name="style" data-try="1"></div>
+  <table class="cheat">
+    <tr><th>Propiedad</th><th>Qué cambia</th><th>Ejemplos de valor</th></tr>
+    <tr><td><code>color</code></td><td>Color del texto</td><td><code>red</code>, <code>navy</code>, <code>#ff6600</code></td></tr>
+    <tr><td><code>background-color</code></td><td>Color de fondo</td><td><code>lightyellow</code>, <code>#e0f2fe</code></td></tr>
+    <tr><td><code>font-size</code></td><td>Tamaño de la letra</td><td><code>14px</code>, <code>30px</code></td></tr>
+    <tr><td><code>font-family</code></td><td>Tipo de letra</td><td><code>Arial</code>, <code>Georgia</code>, <code>'Comic Sans MS'</code>, <code>monospace</code></td></tr>
+    <tr><td><code>text-align</code></td><td>Alineación</td><td><code>left</code>, <code>center</code>, <code>right</code>, <code>justify</code></td></tr>
+  </table>
+  <div class="warn">🕰️ <b>¿Y la etiqueta &lt;font&gt; o <code>bgcolor</code>?</b> En webs antiguas verás <code class="inl">&lt;font color="red"&gt;</code> o <code class="inl">&lt;body bgcolor="yellow"&gt;</code>. Están <b>obsoletas</b>: aún funcionan, pero ya no se usan. Nosotros lo hacemos con <code class="inl">style</code>, que es el primer paso hacia CSS.</div>
+
+  <h3>🎨 Elige un color</h3>
+  <div class="card" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">
+    <input type="color" id="pick" value="#4f46e5" style="width:60px;height:44px;border:0;background:none">
+    <div id="pickOut" style="font-family:monospace;font-size:1.05rem">style="color:#4f46e5"</div>
+    <button class="btn small ghost" id="pickCopy">📋 Copiar</button>
+  </div>
+  <button class="btn green done-btn" data-done="formato">✔ Marcar como completado</button>
+</section>
+
+<!-- ================= 7 MÁS ================= -->
+<section class="sec" id="s-mas" data-track>
+  <span class="kicker">Código · Retos 4-6</span>
+  <h1>🔗 Listas, líneas, enlaces, imágenes y tablas</h1>
+
+  <h2>Listas</h2>
+  <p><code class="inl">&lt;ul&gt;</code> crea una lista con puntos, <code class="inl">&lt;ol&gt;</code> una lista numerada y <code class="inl">&lt;li&gt;</code> es cada elemento. <code class="inl">&lt;dl&gt;</code> es una lista de definiciones, como un diccionario.</p>
+  <div class="snip" data-src="ex-listas" data-name="listas" data-try="1"></div>
+
+  <h2>Línea horizontal</h2>
+  <div class="snip" data-src="ex-hr" data-name="hr" data-try="1"></div>
+
+  <h2>Enlaces (hipervínculos)</h2>
+  <p>La <b>a</b> viene de <i>anchor</i> («ancla»). En <code class="inl">href</code> va la dirección. Con <code class="inl">target="_blank"</code> el enlace se abre en una pestaña nueva.</p>
+  <div class="snip" data-src="ex-enlaces" data-name="enlaces" data-try="1"></div>
+
+  <h2>Imágenes</h2>
+  <p>Guarda la imagen <b>en la misma carpeta</b> que tu archivo .html y escribe su nombre exacto en <code class="inl">src</code>. En <code class="inl">alt</code> va una descripción de la imagen (para quien no puede verla). Con <code class="inl">width</code> cambias su anchura.</p>
+  <div class="snip" data-src="ex-img" data-name="imágenes"></div>
+  <div class="warn">©️ <b>¡Ojo con los derechos de autor!</b> No todas las imágenes de Internet se pueden usar libremente. Busca imágenes con licencia libre (por ejemplo, en <b>Pixabay</b>, <b>Unsplash</b> o <b>Wikimedia Commons</b>), usa tus propias fotos o tus diseños de Canva. Si la licencia lo pide, indica quién es el autor.</div>
+
+  <h2>Tablas</h2>
+  <p><code class="inl">&lt;table&gt;</code> es la tabla, <code class="inl">&lt;tr&gt;</code> cada fila (<i>table row</i>), <code class="inl">&lt;th&gt;</code> una celda de encabezado y <code class="inl">&lt;td&gt;</code> una celda normal (<i>table data</i>).</p>
+  <div class="snip" data-src="ex-tabla" data-name="tabla" data-try="1"></div>
+  <div class="tip">📐 <b>Truco:</b> dibuja primero la tabla en papel y cuenta sus filas. Cada fila es un <code class="inl">&lt;tr&gt;</code> y cada casilla de esa fila, un <code class="inl">&lt;td&gt;</code>.</div>
+  <button class="btn green done-btn" data-done="mas">✔ Marcar como completado</button>
+</section>
+
+<!-- ================= LAB ================= -->
+<section class="sec" id="s-lab">
+  <span class="kicker">Experimenta</span>
+  <h1>🧪 Laboratorio</h1>
+  <p class="lead">Escribe a la izquierda y verás el resultado <b>al instante</b> a la derecha. Cuando funcione, cópialo en VS Code.</p>
+  <div class="labtools">
+    <select id="labEx">
+      <option value="">📂 Cargar ejemplo…</option>
+      <option value="ex-esqueleto">Esqueleto básico</option>
+      <option value="ex-titulos">Títulos</option>
+      <option value="ex-parrafos">Párrafos</option>
+      <option value="ex-caracteres">Formato de caracteres</option>
+      <option value="ex-style">Color y alineación (style)</option>
+      <option value="ex-listas">Listas</option>
+      <option value="ex-enlaces">Enlaces</option>
+      <option value="ex-tabla">Tabla</option>
+    </select>
+    <select id="labTarget">
+      <option value="">🎯 Comparar con un reto…</option>
+      <option value="sol-4">Reto 4 · Mi primera página</option>
+      <option value="sol-5">Reto 5 · Internet</option>
+      <option value="sol-6">Reto 6 · Países</option>
+    </select>
+    <button class="btn small ghost" id="labCopy">📋 Copiar código</button>
+    <button class="btn small ghost" id="labDown">💾 Descargar .html</button>
+    <button class="btn small ghost" id="labReset">🧹 Empezar de cero</button>
+  </div>
+  <div class="lab">
+    <textarea class="code" id="labCode" spellcheck="false" wrap="off" aria-label="Código"></textarea>
+    <iframe id="labView" title="Resultado" sandbox="allow-same-origin"></iframe>
+  </div>
+  <div id="labTargetWrap"><h3>🎯 Objetivo del reto (tu página debe parecerse a esto)</h3><iframe id="labTargetView" title="Objetivo" sandbox></iframe></div>
+  <div class="tip">⌨️ En el laboratorio, la tecla <kbd>Tab</kbd> mete sangría. Lo que escribes se guarda solo en este ordenador, pero <b>tu trabajo de verdad va en VS Code</b>.</div>
+</section>
+
+<!-- ================= RETOS ================= -->
+<section class="sec" id="s-reto4" data-track>
+  <div class="reto-head"><span class="kicker">Reto 4 · Práctica evaluable</span><span class="pill">Nivel 1 ⭐</span></div>
+  <h1>🚀 «Mi primera página web»</h1>
+  <p class="lead">Crea en VS Code el archivo <code class="inl">reto4.html</code> y consigue que se vea <b>lo más parecido posible</b> a esta página, pero <b>con tus datos</b>. Fíjate en los colores, los tamaños, las alineaciones y los tipos de letra.</p>
+  <div class="modebox" data-mode="r4"></div>
+  <iframe class="target" data-sol="sol-4" sandbox title="Objetivo reto 4"></iframe>
+  <div class="demo" style="margin-top:14px">
+    <div class="card checklist" style="margin:0" data-check="r4">
+      <h3>✅ Comprueba tu página</h3>
+      <label class="pair-only"><input type="checkbox"> Primera línea: comentario con <b>los dos nombres</b></label>
+      <label class="pair-only"><input type="checkbox"> Los dos hemos sido <b>piloto</b> y <b>copiloto</b></label>
+      <label><input type="checkbox"> Tiene el esqueleto completo y <code>meta charset</code></label>
+      <label><input type="checkbox"> El título de la pestaña es «Mi primera página web»</label>
+      <label><input type="checkbox"> Fondo de color en el <code>body</code></label>
+      <label><input type="checkbox"> Un <code>h1</code> centrado y de color</label>
+      <label><input type="checkbox"> Dos <code>h2</code> con otro color y otra letra</label>
+      <label><input type="checkbox"> Párrafos con negrita, cursiva y subrayado</label>
+      <label><input type="checkbox"> Una lista con puntos de tus aficiones</label>
+      <label><input type="checkbox"> Una línea <code>hr</code> y un pie de página pequeño y centrado</label>
+    </div>
+    <div class="card" style="margin:0">
+      <h3>💡 Pistas</h3>
+      <ol class="hints" id="h4">
+        <li>Empieza con <kbd>!</kbd> + <kbd>Tab</kbd> y cambia el <code>&lt;title&gt;</code>.</li>
+        <li class="hidden">El fondo se pone en <code>&lt;body style="background-color: ..."&gt;</code>.</li>
+        <li class="hidden">Para centrar el h1: <code>style="text-align:center; color:..."</code>.</li>
+        <li class="hidden">Para la letra de los h2, prueba con <code>font-family: Georgia</code>.</li>
+        <li class="hidden">El pie es un <code>&lt;p&gt;</code> con <code>font-size:12px; text-align:center</code>.</li>
+      </ol>
+      <button class="btn small ghost" data-hint="h4">🔓 Otra pista</button>
+      <button class="btn small" data-target="sol-4">🧪 Probar en el laboratorio</button>
+    </div>
+  </div>
+  <div class="okbox">📤 <b>Entrega:</b> primero guarda <code class="inl">reto4.html</code> en tu carpeta de <b>Drive</b>. Después, en la tarea de <b>Classroom</b>, pulsa <b>Añadir → Google Drive</b> y elígelo.</div>
+  <button class="btn green done-btn" data-done="reto4">✔ Marcar como completado</button>
+</section>
+
+<section class="sec" id="s-reto5" data-track>
+  <div class="reto-head"><span class="kicker">Reto 5 · Práctica evaluable</span><span class="pill">Nivel 2 ⭐⭐</span></div>
+  <h1>🌍 «Internet»</h1>
+  <p class="lead">Crea <code class="inl">reto5.html</code>. Ahora toca usar <b>listas numeradas</b>, <b>enlaces</b>, una <b>imagen</b> y <b>superíndices</b>. Para la imagen, guarda en tu carpeta una de licencia libre sobre Internet (o tu logo de Canva).</p>
+  <div class="modebox" data-mode="r5"></div>
+  <iframe class="target" data-sol="sol-5" sandbox title="Objetivo reto 5"></iframe>
+  <div class="demo" style="margin-top:14px">
+    <div class="card checklist" style="margin:0" data-check="r5">
+      <h3>✅ Comprueba tu página</h3>
+      <label class="pair-only"><input type="checkbox"> Primera línea: comentario con <b>los dos nombres</b></label>
+      <label class="pair-only"><input type="checkbox"> Los dos hemos sido <b>piloto</b> y <b>copiloto</b></label>
+      <label><input type="checkbox"> Título de la pestaña «Internet»</label>
+      <label><input type="checkbox"> Cabecera con fondo de color y <code>h1</code> centrado</label>
+      <label><input type="checkbox"> Una imagen guardada en tu carpeta, con <code>alt</code> y <code>width</code></label>
+      <label><input type="checkbox"> Una lista numerada <code>ol</code> con los pasos</label>
+      <label><input type="checkbox"> Un dato con superíndice (<code>sup</code>)</label>
+      <label><input type="checkbox"> Al menos dos enlaces que se abren en una pestaña nueva</label>
+      <label><input type="checkbox"> Un comentario <code>&lt;!-- --&gt;</code> con tu nombre</label>
+    </div>
+    <div class="card" style="margin:0">
+      <h3>💡 Pistas</h3>
+      <ol class="hints" id="h5">
+        <li>La «cabecera» es un <code>h1</code> con <code>background-color</code>, <code>color:white</code> y <code>text-align:center</code>.</li>
+        <li class="hidden">¿No sale la imagen? Revisa que el nombre en <code>src</code> sea <b>idéntico</b> al del archivo, con su extensión (.png, .jpg…).</li>
+        <li class="hidden">5.500 millones: <code>5,5·10&lt;sup&gt;9&lt;/sup&gt;</code>.</li>
+        <li class="hidden">Para los enlaces: <code>&lt;a href="https://..." target="_blank"&gt;</code>.</li>
+      </ol>
+      <button class="btn small ghost" data-hint="h5">🔓 Otra pista</button>
+      <button class="btn small" data-target="sol-5">🧪 Probar en el laboratorio</button>
+    </div>
+  </div>
+  <div class="okbox">📤 <b>Entrega:</b> guarda <code class="inl">reto5.html</code> y su imagen en tu carpeta de <b>Drive</b>. Después, en <b>Classroom</b>, pulsa <b>Añadir → Google Drive</b> y adjunta los dos archivos.</div>
+  <button class="btn green done-btn" data-done="reto5">✔ Marcar como completado</button>
+</section>
+
+<section class="sec" id="s-reto6" data-track>
+  <div class="reto-head"><span class="kicker">Reto 6 · Práctica evaluable</span><span class="pill">Nivel 3 ⭐⭐⭐</span></div>
+  <h1>🗺️ «Países»</h1>
+  <p class="lead">Crea <code class="inl">reto6.html</code>. El protagonista es la <b>tabla</b>. Puedes elegir otros países, pero debe haber al menos <b>5</b>.</p>
+  <div class="modebox" data-mode="r6"></div>
+  <iframe class="target" data-sol="sol-6" sandbox title="Objetivo reto 6"></iframe>
+  <div class="demo" style="margin-top:14px">
+    <div class="card checklist" style="margin:0" data-check="r6">
+      <h3>✅ Comprueba tu página</h3>
+      <label class="pair-only"><input type="checkbox"> Primera línea: comentario con <b>los dos nombres</b></label>
+      <label class="pair-only"><input type="checkbox"> Los dos hemos sido <b>piloto</b> y <b>copiloto</b></label>
+      <label><input type="checkbox"> Título de la pestaña «Países»</label>
+      <label><input type="checkbox"> Tabla con <code>border="1"</code> y fila de encabezado con <code>th</code></label>
+      <label><input type="checkbox"> El encabezado tiene fondo de color y letra blanca</label>
+      <label><input type="checkbox"> Al menos 5 países con 4 columnas</label>
+      <label><input type="checkbox"> Una lista de definiciones <code>dl</code> con 3 palabras</label>
+      <label><input type="checkbox"> Un enlace a la Wikipedia de algún país</label>
+      <label><input type="checkbox"> Una fórmula con subíndice, como H<sub>2</sub>O o CO<sub>2</sub></label>
+    </div>
+    <div class="card" style="margin:0">
+      <h3>💡 Pistas</h3>
+      <ol class="hints" id="h6">
+        <li>Primero, la fila de títulos: <code>&lt;tr&gt;&lt;th&gt;País&lt;/th&gt;…&lt;/tr&gt;</code>.</li>
+        <li class="hidden">El color de la fila de encabezado: <code>&lt;tr style="background-color:teal; color:white"&gt;</code>.</li>
+        <li class="hidden">Para separar el texto de los bordes de la celda: <code>&lt;table border="1" cellpadding="8"&gt;</code>.</li>
+        <li class="hidden">Para centrar la tabla: <code>style="margin:auto"</code> en <code>&lt;table&gt;</code>.</li>
+      </ol>
+      <button class="btn small ghost" data-hint="h6">🔓 Otra pista</button>
+      <button class="btn small" data-target="sol-6">🧪 Probar en el laboratorio</button>
+    </div>
+  </div>
+  <div class="okbox">📤 <b>Entrega:</b> guarda <code class="inl">reto6.html</code> en tu carpeta de <b>Drive</b>. Después, en <b>Classroom</b>, pulsa <b>Añadir → Google Drive</b> y elígelo.</div>
+  <button class="btn green done-btn" data-done="reto6">✔ Marcar como completado</button>
+</section>
+
+<!-- ================= CHULETA ================= -->
+<section class="sec" id="s-chuleta">
+  <span class="kicker">Ayuda</span>
+  <h1>📋 Chuleta de etiquetas</h1>
+  <input type="text" id="cheatQ" placeholder="🔍 Busca una etiqueta o para qué sirve… (ej.: tabla, negrita)" style="width:100%;max-width:520px;margin-bottom:12px">
+  <table class="cheat" id="cheat">
+    <thead><tr><th>Etiqueta</th><th>Para qué sirve</th><th>¿Se cierra?</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<!-- ================= ERRORES ================= -->
+<section class="sec" id="s-errores">
+  <span class="kicker">Ayuda</span>
+  <h1>🐞 Errores típicos (y cómo arreglarlos)</h1>
+  <p class="lead">Si tu página no se ve como esperas, revisa esta lista <b>antes</b> de llamar al profe. 🕵️</p>
+  <div id="errList"></div>
+</section>
+
+<!-- ================= TEST ================= -->
+<section class="sec" id="s-test" data-track>
+  <span class="kicker">Evaluación</span>
+  <h1>📝 Test: práctica y examen</h1>
+  <div class="seg tabsel" id="tTabs"><button data-tab="prac" class="on">🎯 Modo práctica</button><button data-tab="exam">🔒 Modo examen</button></div>
+
+  <!-- ---------- PRÁCTICA ---------- -->
+  <div id="tPrac">
+    <p class="lead">Entrena todas las veces que quieras: <b>no cuenta para la nota</b>. Si fallas, lee la explicación y pulsa <b>📖 Repasar</b> para ir a la teoría. Las preguntas del examen salen de esta misma batería.</p>
+    <div class="card pstats">
+      <label><b>Bloque:</b> <select id="pBlock"></select></label>
+      <button class="btn" id="pStart">▶ Empezar</button>
+      <span class="stat">✅ <b id="pOk">0</b> / <b id="pTot">0</b></span>
+      <span class="stat">🔥 Racha <b id="pStreak">0</b></span>
+      <span class="stat">🏆 Récord <b id="pBest">0</b></span>
+    </div>
+    <div id="pCard"></div>
+  </div>
+
+  <!-- ---------- EXAMEN ---------- -->
+  <div id="tExam" style="display:none">
+    <div id="eStart">
+      <p class="lead"><b>20 preguntas al azar</b> de la batería y <b>20 minutos</b>. Mientras dura el examen <b>no se puede ver el resto de la app</b>, y si sales de la pestaña o de la ventana, <b>queda registrado</b>. Necesitas la clave que te dará el profesor.</p>
+      <div class="modebox" data-mode="test" data-simple="1"></div>
+      <div class="card" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <label for="qName"><b>Nombre y apellidos:</b></label>
+        <input type="text" id="qName" style="flex:1;min-width:220px">
+        <label for="qName2" class="pair-only"><b>Compañero/a:</b></label>
+        <input type="text" id="qName2" class="pair-only" style="flex:1;min-width:220px" placeholder="Nombre y apellidos">
+        <label for="qGroup"><b>Grupo:</b></label>
+        <input type="text" id="qGroup" style="width:90px" placeholder="3.ºA">
+      </div>
+      <div class="card" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <label for="eKey"><b>🔑 Clave del profesor:</b></label>
+        <input type="password" id="eKey" style="width:160px" autocomplete="off">
+        <button class="btn" id="eGo">🔒 Empezar examen</button>
+      </div>
+      <details class="card" id="tVerify">
+        <summary><b>👨‍🏫 Zona del profesor: comprobar un código de verificación</b></summary>
+        <p style="font-size:.9rem;color:var(--muted)">Copia los datos <b>exactamente</b> como aparecen en la captura del alumno.</p>
+        <div class="vgrid">
+          <label>Clave <input type="password" id="vKey"></label>
+          <label>Nombre(s) <input type="text" id="vName" placeholder="Ana García y Luis Pérez"></label>
+          <label>Aciertos (de 20) <input type="text" id="vOk" placeholder="15"></label>
+          <label>Salidas <input type="text" id="vOut" placeholder="0"></label>
+          <label>Fecha y hora <input type="text" id="vDate" placeholder="03/12/2026, 10:42"></label>
+          <label>Código <input type="text" id="vCode" placeholder="AB12CD"></label>
+        </div>
+        <button class="btn small" id="vGo">Comprobar</button> <b id="vRes"></b>
+      </details>
+    </div>
+
+    <div id="eRun" style="display:none">
+      <div class="ebar"><span>🔒 <b>MODO EXAMEN</b></span><span id="eWho"></span><span>📝 <b id="eDone">0</b>/20</span><span class="eclock">⏱ <b id="eClock">20:00</b></span></div>
+      <div id="eQuiz"></div>
+      <button class="btn" id="eSend">📤 Entregar examen</button>
+    </div>
+
+    <div id="eEnd" style="display:none">
+      <div class="result" id="eResult" style="display:block"></div>
+      <p style="text-align:center"><b>📸 Haz una captura de esta pantalla</b> y súbela a Classroom, o enséñasela al profesor.</p>
+      <h3>Revisión de tus respuestas</h3>
+      <div id="eReview"></div>
+      <button class="btn ghost" id="eExit">🚪 Salir del modo examen</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FICHA ================= -->
+<section class="sec" id="s-ficha">
+  <div class="noprint">
+    <span class="kicker">Para hacer a mano</span>
+    <h1>✍️ Fichas a mano: Sets 1 y 2</h1>
+    <p class="lead">Imprímelas o cópialas en tu cuaderno. Son <b>individuales</b>: contesta <b>con tus propias palabras</b> y con buena letra. Copiar y pegar no vale aquí. 😉</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <button class="btn" data-print="1">🖨️ Imprimir Set 1</button>
+      <button class="btn" data-print="2">🖨️ Imprimir Set 2</button>
+      <button class="btn ghost" data-print="0">🖨️ Imprimir las dos</button>
+    </div>
+  </div>
+  <div class="card ficha" id="ficha1">
+    <h2 style="margin-top:0">Computación y Robótica · 3.º ESO · Unidad 1 · Actividades Set 1: Servidores web</h2>
+    <div class="fhead"><div>Nombre:</div><div>Grupo:</div><div>Fecha:</div></div>
+    <div class="fq"><b>1.</b> ¿Qué es una <b>página web</b>? ¿En qué se diferencia de un <b>sitio web</b>?<div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="fq"><b>2.</b> ¿En qué consiste el protocolo <b>HTTP</b>? ¿Qué añade <b>HTTPS</b>?<div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="fq"><b>3.</b> ¿Qué son las <b>cookies</b> y para qué las usan los navegadores? Escribe un ejemplo.<div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="fq"><b>4.</b> Define qué es una <b>URL</b>. Después, copia esta URL y señala con flechas sus partes: protocolo, subdominio, dominio, ruta, archivo, parámetros y ancla.<div class="line"></div><div class="line"></div><div class="urlbox">https://www.ejemplo.es/clase/3eso/index.html?tema=html#inicio</div></div>
+    <div class="fq"><b>5.</b> Escribe el nombre de <b>tres protocolos</b> distintos de HTTP y explica para qué sirve cada uno.<div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="fq"><b>6.</b> ¿Qué es un <b>servidor web</b> y para qué se usa? Explica la diferencia entre un servidor <b>compartido</b> y uno <b>dedicado</b>.<div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="fq"><b>7.</b> ¿Qué es una <b>dirección IP</b>? ¿Qué hace el <b>DNS</b>? Usa un ejemplo de la vida real para explicarlo.<div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+  </div>
+  <div class="card ficha" id="ficha2">
+    <h2 style="margin-top:0">Computación y Robótica · 3.º ESO · Unidad 1 · Actividades Set 2</h2>
+    <div class="fhead"><div>Nombre:</div><div>Grupo:</div><div>Fecha:</div></div>
+    <div class="fq"><b>1.</b> ¿Qué es la <b>cabecera</b> (header) de una página web? ¿Qué suele contener?<div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="fq"><b>2.</b> ¿Qué es el <b>cuerpo</b> (body) de una página web? ¿Qué suele contener?<div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="fq"><b>3.</b> ¿Qué es el <b>pie</b> (footer) de una página web? ¿Qué suele contener?<div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="fq"><b>4.</b> Escribe al menos <b>una herramienta</b> de cada tipo y explica para qué sirve: editor de código, editor visual, navegador, editor online, diseño gráfico y programa para subir archivos.<div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="fq"><b>5.</b> Nombra los principales <b>lenguajes</b> de edición de páginas web y explica en una frase la función de cada uno. ¿Por qué ya no se usa Flash?<div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="fq"><b>6.</b> <b>Dibuja</b> el esquema de una web que uses a menudo y señala su cabecera, su menú, su cuerpo y su pie.<div class="box"></div></div>
+    <div class="fq"><b>7.</b> (En el ordenador) Diseña en <b>Canva</b> un logo con tu nombre y guárdalo como <i>logo.png</i> en tu carpeta de la web. ✔ Hecho: ☐</div>
+  </div>
+</section>
+
+<footer class="credit">Materiales de Computación y Robótica · 3.º ESO · Autor: Manuel Martín Soriano · Curso 2026-27</footer>
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- ================= FRAGMENTOS DE CÓDIGO ================= -->
+<script type="text/plain" id="ex-etiqueta">
+<p>Esto es un párrafo</p>
+<!-- ↑ etiqueta que abre    ↑ etiqueta que cierra (lleva /) -->
+</script>
+
+<script type="text/plain" id="ex-esqueleto">
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Mi primera página</title>
+  </head>
+  <body>
+    <!-- Todo lo que se ve va aquí dentro -->
+    <h1>¡Hola, mundo!</h1>
+    <p>Esta es mi primera página web. ¡Qué guay!</p>
+  </body>
+</html>
+</script>
+
+<script type="text/plain" id="ex-titulos">
+<h1>Título 1: el más grande</h1>
+<h2>Título 2</h2>
+<h3>Título 3</h3>
+<h4>Título 4</h4>
+<h5>Título 5</h5>
+<h6>Título 6: el más pequeño</h6>
+</script>
+
+<script type="text/plain" id="ex-parrafos">
+<p>Este es un párrafo. Aunque pulse Enter
+en el código,
+el navegador lo escribe todo seguido.</p>
+
+<p>Este es otro párrafo.<br>
+Y esta línea va debajo gracias a br.</p>
+</script>
+
+<script type="text/plain" id="ex-caracteres">
+<p>Texto en <b>negrita</b>, en <i>cursiva</i> y <u>subrayado</u>.</p>
+<p>Agua: H<sub>2</sub>O (subíndice)</p>
+<p>Área: 25 m<sup>2</sup> (superíndice)</p>
+<p><b><i>Negrita y cursiva a la vez</i></b></p>
+</script>
+
+<script type="text/plain" id="ex-style">
+<body style="background-color: lightyellow;">
+  <h1 style="color: navy; text-align: center;">Título centrado y azul</h1>
+  <p style="color: #c2410c; font-size: 20px;">Párrafo naranja y grande</p>
+  <p style="font-family: 'Comic Sans MS'; text-align: right;">Otra letra, a la derecha</p>
+  <p style="text-align: justify;">Texto justificado: queda recto por los dos lados, como en los libros. Escribe bastante texto para notar la diferencia con la alineación a la izquierda.</p>
+</body>
+</script>
+
+<script type="text/plain" id="ex-listas">
+<h3>Mis videojuegos favoritos</h3>
+<ul>
+  <li>Minecraft</li>
+  <li>Rocket League</li>
+  <li>Mario Kart</li>
+</ul>
+
+<h3>Pasos para hacer una web</h3>
+<ol>
+  <li>Abrir VS Code</li>
+  <li>Escribir el código</li>
+  <li>Guardar con Ctrl + S</li>
+</ol>
+
+<h3>Mini diccionario</h3>
+<dl>
+  <dt>HTML</dt>
+  <dd>Lenguaje para la estructura de las webs.</dd>
+  <dt>URL</dt>
+  <dd>Dirección de una página web.</dd>
+</dl>
+</script>
+
+<script type="text/plain" id="ex-hr">
+<p>Texto de arriba</p>
+<hr>
+<p>Texto de abajo</p>
+<hr style="height: 6px; background-color: crimson; border: none;">
+</script>
+
+<script type="text/plain" id="ex-enlaces">
+<p>Visita la <a href="https://es.wikipedia.org">Wikipedia</a>.</p>
+<p><a href="https://www.juntadeandalucia.es/educacion" target="_blank">Junta de Andalucía (se abre en una pestaña nueva)</a></p>
+<p><a href="reto5.html">Ir a mi otra página</a></p>
+</script>
+
+<script type="text/plain" id="ex-img">
+<!-- La imagen logo.png está en la MISMA carpeta que este archivo -->
+<img src="logo.png" alt="Mi logo hecho en Canva" width="200">
+
+<!-- Imagen dentro de una subcarpeta llamada img -->
+<img src="img/robot.jpg" alt="Un robot de cocina" width="300">
+</script>
+
+<script type="text/plain" id="ex-tabla">
+<table border="1">
+  <tr>
+    <th>Nombre</th>
+    <th>Edad</th>
+    <th>Ciudad</th>
+  </tr>
+  <tr>
+    <td>Lucía</td>
+    <td>14</td>
+    <td>Almería</td>
+  </tr>
+  <tr>
+    <td>Pablo</td>
+    <td>15</td>
+    <td>Granada</td>
+  </tr>
+</table>
+</script>
+
+<!-- ================= MODELOS DE LOS RETOS ================= -->
+<script type="text/plain" id="sol-4">
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Mi primera página web</title>
+  </head>
+  <body style="background-color: #fef9c3; font-family: Arial;">
+    <h1 style="color: #1d4ed8; text-align: center; font-size: 40px;">Mi primera página web</h1>
+    <p style="text-align: center;">¡Hola! Me llamo <b>Lucía Martínez</b> y estudio <i>3.º de ESO</i>.</p>
+    <h2 style="color: #be185d; font-family: Georgia;">Mis aficiones</h2>
+    <ul>
+      <li>Jugar al baloncesto</li>
+      <li>Dibujar manga</li>
+      <li>Escuchar música</li>
+    </ul>
+    <h2 style="color: #be185d; font-family: Georgia;">Mi asignatura favorita</h2>
+    <p>Me encanta <u>Computación y Robótica</u> porque aprendo a <b>crear</b> cosas con el ordenador y no solo a <i>usarlo</i>.</p>
+    <hr>
+    <p style="font-size: 12px; text-align: center; color: gray;">Página creada por Lucía · 2026</p>
+  </body>
+</html>
+</script>
+
+<script type="text/plain" id="sol-5">
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Internet</title>
+  </head>
+  <body style="font-family: Verdana; background-color: #f0f9ff;">
+    <!-- Hecho por: Lucía Martínez -->
+    <h1 style="background-color: #0c4a6e; color: white; text-align: center; font-size: 42px;">INTERNET</h1>
+    <p style="text-align: center;"><img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='130'><rect width='260' height='130' rx='14' fill='%23bae6fd'/><circle cx='130' cy='65' r='42' fill='none' stroke='%230c4a6e' stroke-width='5'/><ellipse cx='130' cy='65' rx='18' ry='42' fill='none' stroke='%230c4a6e' stroke-width='4'/><line x1='88' y1='65' x2='172' y2='65' stroke='%230c4a6e' stroke-width='4'/><text x='130' y='124' font-size='11' text-anchor='middle' fill='%230c4a6e'>tu imagen aquí</text></svg>" alt="Dibujo de la red Internet" width="260"></p>
+    <p style="text-align: justify;"><b>Internet</b> es una <i>red de redes</i>: millones de ordenadores de todo el mundo conectados entre sí que se comunican usando las mismas reglas, llamadas <b>protocolos</b>.</p>
+    <h2 style="color: #0369a1;">¿Cómo llega una web a mi pantalla?</h2>
+    <ol>
+      <li>Escribo la URL en el navegador.</li>
+      <li>El DNS busca la dirección IP del servidor.</li>
+      <li>Mi navegador hace una petición HTTP.</li>
+      <li>El servidor envía la página.</li>
+      <li>El navegador la dibuja.</li>
+    </ol>
+    <h2 style="color: #0369a1;">Dato curioso</h2>
+    <p>En el mundo hay unos <b>5,5·10<sup>9</sup></b> usuarios de Internet.</p>
+    <hr>
+    <p>Más información: <a href="https://es.wikipedia.org/wiki/Internet" target="_blank">Wikipedia</a> · <a href="https://www.is4k.es" target="_blank">Internet Segura for Kids</a></p>
+  </body>
+</html>
+</script>
+
+<script type="text/plain" id="sol-6">
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Países</title>
+  </head>
+  <body style="font-family: Tahoma; background-color: #f0fdfa;">
+    <h1 style="color: #0f766e; text-align: center;">🌍 Países del mundo</h1>
+    <table border="1" cellpadding="8" style="margin: auto; background-color: white;">
+      <tr style="background-color: teal; color: white;">
+        <th>País</th>
+        <th>Capital</th>
+        <th>Idioma</th>
+        <th>Continente</th>
+      </tr>
+      <tr><td>España</td><td>Madrid</td><td>Español</td><td>Europa</td></tr>
+      <tr><td>Japón</td><td>Tokio</td><td>Japonés</td><td>Asia</td></tr>
+      <tr><td>Brasil</td><td>Brasilia</td><td>Portugués</td><td>América</td></tr>
+      <tr><td>Marruecos</td><td>Rabat</td><td>Árabe</td><td>África</td></tr>
+      <tr><td>Australia</td><td>Canberra</td><td>Inglés</td><td>Oceanía</td></tr>
+    </table>
+    <h2 style="color: #0f766e;">Mini glosario</h2>
+    <dl>
+      <dt><b>Capital</b></dt>
+      <dd>Ciudad donde está el gobierno de un país.</dd>
+      <dt><b>Continente</b></dt>
+      <dd>Gran extensión de tierra separada por océanos.</dd>
+      <dt><b>CO<sub>2</sub></b></dt>
+      <dd>Dióxido de carbono, el gas que emiten los coches.</dd>
+    </dl>
+    <p>Saber más sobre <a href="https://es.wikipedia.org/wiki/Japón" target="_blank">Japón</a>.</p>
+  </body>
+</html>
+</script>
+
+<script>
+(function(){
+"use strict";
+/* ---------- storage seguro ---------- */
+const store={
+  get(k,d){try{const v=localStorage.getItem("html3eso_"+k);return v===null?d:JSON.parse(v);}catch(e){return d;}},
+  set(k,v){try{localStorage.setItem("html3eso_"+k,JSON.stringify(v));}catch(e){}}
+};
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove("show"),1800);}
+
+/* ---------- utilidades de código ---------- */
+function src(id){
+  const el=document.getElementById(id); if(!el) return "";
+  let lines=el.textContent.replace(/^\n+|\s+$/g,"").split("\n");
+  const ind=Math.min(...lines.filter(l=>l.trim()).map(l=>l.match(/^ */)[0].length));
+  return lines.map(l=>l.slice(ind)).join("\n");
+}
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function hl(code){
+  let out="",last=0,m; const re=/<!--[\s\S]*?-->|<\/?[a-zA-Z!][^>]*>/g;
+  while((m=re.exec(code))){
+    out+=esc(code.slice(last,m.index)); const t=m[0];
+    if(t.startsWith("<!--")) out+='<span class="c">'+esc(t)+"</span>";
+    else{
+      const mm=t.match(/^(<\/?)([a-zA-Z0-9!]+)([\s\S]*?)(\/?>)$/);
+      if(!mm) out+=esc(t);
+      else{
+        const attrs=esc(mm[3]).replace(/([\w-]+)(=)("[^"]*"|'[^']*')/g,'<span class="a">$1</span>=<span class="s">$3</span>');
+        out+='<span class="t">'+esc(mm[1])+mm[2]+"</span>"+attrs+'<span class="t">'+esc(mm[4])+"</span>";
+      }
+    }
+    last=re.lastIndex;
+  }
+  return out+esc(code.slice(last));
+}
+function wrapDoc(code){
+  if(/<html|<!DOCTYPE/i.test(code)) return code;
+  if(/<body/i.test(code)) return '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"></head>'+code+"</html>";
+  return '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"></head><body style="font-family:Arial">'+code+"</body></html>";
+}
+function copy(text){
+  const ok=()=>toast("📋 ¡Copiado! Pégalo en VS Code con Ctrl+V");
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(ok,()=>fallback());}else fallback();
+  function fallback(){const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");ok();}catch(e){toast("Selecciona el código y pulsa Ctrl+C");}ta.remove();}
+}
+
+/* ---------- snippets ---------- */
+$$(".snip").forEach(box=>{
+  const code=src(box.dataset.src);
+  box.innerHTML='<div class="bar2"><span class="dots"><i></i><i></i><i></i></span><span class="name">'+esc(box.dataset.name||"código")+'</span>'+
+    (box.dataset.try?'<button data-act="try">🧪 Probar</button>':"")+'<button data-act="copy">📋 Copiar</button></div><pre><code>'+hl(code)+"</code></pre>";
+  box.querySelector('[data-act="copy"]').onclick=()=>copy(code);
+  const tb=box.querySelector('[data-act="try"]'); if(tb) tb.onclick=()=>{loadLab(code);go("lab");};
+});
+
+/* ---------- navegación ---------- */
+const tracked=$$("section[data-track]").map(s=>s.id.slice(2));
+let done=store.get("done",{});
+function go(id){
+  if(typeof examOn!=="undefined"&&examOn){toast("🔒 Termina el examen antes de salir");if(location.hash!=="#test")history.replaceState(null,"","#test");return;}
+  if(!document.getElementById("s-"+id)) id="inicio";
+  $$("section.sec").forEach(s=>s.classList.toggle("on",s.id==="s-"+id));
+  $$("nav.side button").forEach(b=>b.classList.toggle("on",b.dataset.go===id));
+  if(location.hash!=="#"+id) history.replaceState(null,"","#"+id);
+  window.scrollTo(0,0); $("#side").classList.remove("open");
+}
+document.addEventListener("click",e=>{
+  const g=e.target.closest("[data-go]"); if(g){go(g.dataset.go);return;}
+  const a=e.target.closest('a[href^="#"]'); if(a){e.preventDefault();go(a.getAttribute("href").slice(1));}
+});
+window.addEventListener("hashchange",()=>go(location.hash.slice(1)));
+$("#menuBtn").onclick=()=>$("#side").classList.toggle("open");
+function paintProgress(){
+  const n=tracked.filter(t=>done[t]).length, p=Math.round(n/tracked.length*100);
+  $("#progBar").style.width=p+"%"; $("#progTxt").textContent=p+" %";
+  $$("nav.side button").forEach(b=>b.classList.toggle("done",!!done[b.dataset.go]));
+  $$("[data-done]").forEach(b=>{b.textContent=done[b.dataset.done]?"✅ Completado (pulsa para desmarcar)":"✔ Marcar como completado";});
+}
+$$("[data-done]").forEach(b=>b.onclick=()=>{const k=b.dataset.done;done[k]=!done[k];store.set("done",done);paintProgress();if(done[k])toast("🎉 ¡Apartado completado!");});
+
+/* ---------- flujo petición ---------- */
+$("#flowBtn").onclick=()=>{const d=$$("#flow div");d.forEach(x=>x.classList.remove("lit"));d.forEach((x,i)=>setTimeout(()=>{d.forEach(y=>y.classList.remove("lit"));x.classList.add("lit");},i*900));setTimeout(()=>d.forEach(y=>y.classList.remove("lit")),d.length*900+600);};
+
+/* ---------- DNS ---------- */
+$("#dnsPick").onchange=e=>{const o=$("#dnsOut");o.textContent="buscando…";setTimeout(()=>{o.textContent=e.target.value||"¿IP?";},600);};
+
+/* ---------- URL ---------- */
+const urlTxt=[
+ "<b style='color:#db2777'>Protocolo (https)</b>: las reglas para comunicarse con el servidor. La <b>s</b> indica que la conexión es <b>segura</b> y va cifrada 🔒.",
+ "<b style='color:#b45309'>Subdominio (www)</b>: significa <i>World Wide Web</i>. Muchas webs ya funcionan sin él.",
+ "<b style='color:#059669'>Dominio (ejemplo.es)</b>: el nombre de la web. La terminación <b>.es</b> es el país (España). Otras son <b>.com</b> (empresas), <b>.org</b> (organizaciones), <b>.edu</b> (educación) o <b>.gov</b> (gobierno).",
+ "<b style='color:#2563eb'>Ruta (/clase/3eso/)</b>: las carpetas del servidor donde está el archivo, igual que las carpetas de tu ordenador.",
+ "<b style='color:#7c3aed'>Archivo (index.html)</b>: la página concreta. <code>index.html</code> es la página principal de una carpeta.",
+ "<b style='color:#ea580c'>Parámetros (?tema=html)</b>: información extra que se envía al servidor, por ejemplo lo que buscas en Google.",
+ "<b style='color:#65a30d'>Ancla (#inicio)</b>: te lleva a una zona concreta dentro de la página. ¡Mira la barra de direcciones de esta app!"
+];
+$$("#url span").forEach(s=>s.onclick=()=>{$$("#url span").forEach(x=>x.classList.remove("sel"));s.classList.add("sel");$("#urlInfo").innerHTML=urlTxt[s.dataset.i];});
+
+/* ---------- mock estructura ---------- */
+const mockTxt=[
+ "<h3>🎩 Cabecera (header)</h3>La parte de arriba, que se repite en todas las páginas de la web. Suele tener el <b>logo</b>, el <b>nombre</b> de la web y, a veces, un buscador o el botón de iniciar sesión.",
+ "<h3>🧭 Menú de navegación (nav)</h3>Los <b>enlaces</b> a las secciones principales. Suele estar dentro de la cabecera o justo debajo.",
+ "<h3>📄 Cuerpo (body / main)</h3>El <b>contenido principal</b>: textos, imágenes, vídeos, tablas… Es lo que cambia de una página a otra.",
+ "<h3>👣 Pie (footer)</h3>La parte de abajo. Suele llevar el <b>copyright ©</b>, el contacto, el aviso legal, la política de privacidad y los enlaces a redes sociales."
+];
+$$("#mock > div").forEach(d=>d.onclick=()=>{$("#mockInfo").innerHTML=mockTxt[d.dataset.m];});
+
+/* ---------- color picker ---------- */
+$("#pick").oninput=e=>{$("#pickOut").textContent='style="color:'+e.target.value+'"';$("#pickOut").style.color=e.target.value;};
+$("#pickCopy").onclick=()=>copy($("#pickOut").textContent);
+
+/* ---------- laboratorio ---------- */
+const labCode=$("#labCode"), labView=$("#labView");
+let labT;
+function render(){labView.srcdoc=wrapDoc(labCode.value);store.set("lab",labCode.value);}
+function loadLab(code){labCode.value=code;render();}
+labCode.addEventListener("input",()=>{clearTimeout(labT);labT=setTimeout(render,250);});
+labCode.addEventListener("keydown",e=>{
+  if(e.key==="Tab"){e.preventDefault();const s=labCode.selectionStart,en=labCode.selectionEnd;labCode.value=labCode.value.slice(0,s)+"  "+labCode.value.slice(en);labCode.selectionStart=labCode.selectionEnd=s+2;render();}
+});
+$("#labEx").onchange=e=>{if(e.target.value){loadLab(src(e.target.value));e.target.value="";}};
+$("#labTarget").onchange=e=>showTarget(e.target.value);
+function showTarget(id){$("#labTargetWrap").style.display=id?"block":"none";if(id)$("#labTargetView").srcdoc=src(id);$("#labTarget").value=id||"";}
+$("#labCopy").onclick=()=>copy(labCode.value);
+$("#labDown").onclick=()=>{const b=new Blob([labCode.value],{type:"text/html"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="mi_pagina.html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
+$("#labReset").onclick=()=>{if(confirm("¿Borrar todo y empezar con el esqueleto básico?"))loadLab(src("ex-esqueleto"));};
+loadLab(store.get("lab",src("ex-esqueleto")));
+
+/* ---------- retos ---------- */
+$$("iframe.target").forEach(f=>f.srcdoc=src(f.dataset.sol));
+$$("[data-hint]").forEach(b=>b.onclick=()=>{const h=$("#"+b.dataset.hint+" li.hidden");if(h)h.classList.remove("hidden");else toast("No hay más pistas. ¡Tú puedes! 💪");});
+$$("[data-target]").forEach(b=>b.onclick=()=>{loadLab(src("ex-esqueleto"));showTarget(b.dataset.target);go("lab");});
+const checks=store.get("checks",{});
+$$("[data-check]").forEach(c=>{const k=c.dataset.check;const boxes=c.querySelectorAll("input");boxes.forEach((x,i)=>{x.checked=!!(checks[k]&&checks[k][i]);x.onchange=()=>{checks[k]=Array.from(boxes).map(y=>y.checked);store.set("checks",checks);};});});
+
+/* ---------- chuleta ---------- */
+const cheat=[
+ ["<!DOCTYPE html>","Indica que el documento es HTML5 (primera línea)","No"],
+ ["<html lang=\"es\">","Contiene toda la página","Sí"],
+ ["<head>","Información invisible de la página","Sí"],
+ ["<meta charset=\"utf-8\">","Para que se vean las tildes y la ñ","No"],
+ ["<title>","Texto de la pestaña del navegador","Sí"],
+ ["<body>","Cuerpo: todo lo visible","Sí"],
+ ["<h1> … <h6>","Títulos, del más grande al más pequeño","Sí"],
+ ["<p>","Párrafo","Sí"],
+ ["<br>","Salto de línea","No"],
+ ["<b> / <strong>","Negrita / texto importante","Sí"],
+ ["<i> / <em>","Cursiva / énfasis","Sí"],
+ ["<u>","Subrayado","Sí"],
+ ["<sub>","Subíndice (H₂O)","Sí"],
+ ["<sup>","Superíndice (m²)","Sí"],
+ ["<hr>","Línea horizontal","No"],
+ ["<ul>","Lista con puntos (desordenada)","Sí"],
+ ["<ol>","Lista numerada (ordenada)","Sí"],
+ ["<li>","Elemento de una lista","Sí"],
+ ["<dl> <dt> <dd>","Lista de definiciones: término y definición","Sí"],
+ ["<a href=\"…\">","Enlace / hipervínculo","Sí"],
+ ["<img src=\"…\" alt=\"…\">","Imagen","No"],
+ ["<table>","Tabla","Sí"],
+ ["<tr>","Fila de la tabla","Sí"],
+ ["<th>","Celda de encabezado (negrita y centrada)","Sí"],
+ ["<td>","Celda normal","Sí"],
+ ["<!-- … -->","Comentario (no se ve en la página)","—"],
+ ["style=\"…\"","Atributo para cambiar color, tamaño, letra y alineación","—"],
+ ["target=\"_blank\"","Atributo de <a>: abre el enlace en una pestaña nueva","—"],
+ ["width=\"…\"","Atributo de <img>: anchura de la imagen","—"],
+ ["border=\"1\"","Atributo de <table>: muestra los bordes (en el 2.º trimestre lo haremos con CSS)","—"]
+];
+function paintCheat(q){
+  q=(q||"").toLowerCase();
+  const norm=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+  $("#cheat tbody").innerHTML=cheat.filter(r=>!q||norm(r.join(" ")).includes(norm(q))).map(r=>"<tr><td><code>"+esc(r[0])+"</code></td><td>"+esc(r[1])+"</td><td>"+r[2]+"</td></tr>").join("")||"<tr><td colspan=3>No hay resultados 🤔</td></tr>";
+}
+$("#cheatQ").oninput=e=>paintCheat(e.target.value); paintCheat();
+
+/* ---------- errores ---------- */
+const errs=[
+ ["Se ven símbolos raros en lugar de tildes o ñ","<head>\n  <title>Mi página</title>\n</head>","<head>\n  <meta charset=\"utf-8\">\n  <title>Mi página</title>\n</head>","Te falta <code>&lt;meta charset=\"utf-8\"&gt;</code> dentro de <code>&lt;head&gt;</code>."],
+ ["¡Todo se ha vuelto negrita (o un título gigante)!","<p>Hola <b>mundo</p>\n<p>Adiós</p>","<p>Hola <b>mundo</b></p>\n<p>Adiós</p>","Has olvidado <b>cerrar</b> una etiqueta. Busca la que abre y añade su pareja con <code>/</code>."],
+ ["Cambio el código pero en el navegador no cambia nada","(cambias el código y recargas…)","Ctrl + S en VS Code\nF5 en el navegador","¿Has <b>guardado</b>? Si la pestaña de VS Code tiene un ⚪, no está guardado."],
+ ["La imagen sale rota 🖼️❌","<img src=\"Logo.PNG\">\n<!-- el archivo se llama logo.png -->","<img src=\"logo.png\" alt=\"Mi logo\">","El nombre en <code>src</code> debe ser <b>exactamente igual</b> al del archivo (mayúsculas y extensión incluidas), y la imagen debe estar en la misma carpeta."],
+ ["El color o el estilo no hace nada","<p style=\"color=red, font-size:20\">","<p style=\"color: red; font-size: 20px;\">","En <code>style</code> se usan <b>dos puntos</b> <code>:</code> entre propiedad y valor, <b>punto y coma</b> <code>;</code> entre propiedades y unidades como <code>px</code>."],
+ ["Las etiquetas aparecen escritas en la página","<p>Hola<p>\n< h1>Título</h1>","<p>Hola</p>\n<h1>Título</h1>","No dejes <b>espacios</b> después de <code>&lt;</code> y revisa que las barras <code>/</code> estén en las etiquetas que cierran."],
+ ["Al abrir el archivo se ve el código en vez de la página","index.html.txt\nmi pagina.HTML ","index.html","El archivo debe terminar en <b>.html</b> y no en .txt. Sin espacios en el nombre."],
+ ["Abro mi .html en Google Drive y solo veo código","(clic en reto4.html dentro de Drive)","Drive → clic derecho → Descargar\nCarpeta de trabajo → doble clic → Firefox","Drive solo muestra el texto del archivo. Para ver la página, <b>descárgala</b> y ábrela con Firefox."],
+ ["En Drive tengo reto4.html, reto4(1).html, reto4(2).html…","Subir archivo → «Mantener ambos archivos»","Subir archivo → «Reemplazar archivo existente»","Al subir un archivo que ya existe, elige <b>reemplazar</b>. Si ya tienes copias, deja solo la más reciente (mira la fecha de modificación)."],
+ ["¡He perdido mi trabajo de la clase anterior!","(guardé solo en el ordenador del instituto)","Al final de CADA clase:\n+ Nuevo → Subir archivo (a tu carpeta de Drive)","Los ordenadores de EducaAndOS pueden borrar tus archivos. Lo único seguro es <b>Drive</b>: súbelo siempre antes de irte."],
+ ["La tabla sale descolocada","<tr>\n  <td>A</td>\n  <td>B</td>\n<tr>","<tr>\n  <td>A</td>\n  <td>B</td>\n</tr>","Comprueba que cada <code>&lt;tr&gt;</code> se cierra y que todas las filas tienen el <b>mismo número</b> de celdas."]
+];
+$("#errList").innerHTML=errs.map(e=>'<div class="card"><h3>🐞 '+e[0]+'</h3><div class="err"><div class="snip bad"><div class="bar2"><span class="name">❌ Mal</span></div><pre><code>'+hl(e[1])+'</code></pre></div><div class="snip good"><div class="bar2"><span class="name">✅ Bien</span></div><pre><code>'+hl(e[2])+'</code></pre></div></div><p>💡 '+e[3]+'</p></div>').join("");
+
+/* ---------- BATERÍA DE PREGUNTAS ----------
+ t: mc = opción múltiple · ver = ¿qué se ve? (opciones en HTML) · err = encuentra el error · comp = completa
+ b: bloque · c: código · o: opciones · a: correcta · e: explicación · s: apartado para repasar */
+const BLOCKS=["Internet y servidores","Partes, lenguajes y herramientas","VS Code y Drive","El esqueleto HTML","Formato del texto","Listas, enlaces, imágenes y tablas","Seguridad y licencias"];
+const BANK=[
+/* ===== 1 · Internet y servidores ===== */
+{b:1,t:"mc",s:"internet",q:"¿Qué es una página web?",o:["Un programa que se instala en el ordenador","Un documento escrito en HTML que se ve con un navegador y puede tener enlaces","Una red de ordenadores","Un cable de red"],a:1,e:"Una página web es un documento HTML con texto, imágenes y enlaces que muestra el navegador."},
+{b:1,t:"mc",s:"internet",q:"¿Qué es un sitio web?",o:["Una sola página muy larga","Un conjunto de páginas web enlazadas con un mismo dominio","El ordenador donde se guarda una web","Un navegador"],a:1,e:"Un sitio web reúne muchas páginas enlazadas, como la web de tu instituto."},
+{b:1,t:"mc",s:"internet",q:"¿Qué es un servidor web?",o:["Un ordenador que guarda páginas web y las envía a quien las pide","El navegador que usas para ver webs","La persona que diseña una web","Un buscador como Google"],a:0,e:"El servidor está siempre encendido y conectado: guarda las webs y las sirve."},
+{b:1,t:"mc",s:"internet",q:"¿Cuál de estos NO es un uso típico de un servidor web?",o:["Alojar una tienda online","Guardar archivos en la nube","Imprimir documentos en tu casa","Servir los vídeos de una plataforma"],a:2,e:"Imprimir en casa lo hace tu impresora, no un servidor web."},
+{b:1,t:"mc",s:"internet",q:"¿Qué protocolo usan el navegador y el servidor para pedir y enviar páginas web?",o:["FTP","HTTP / HTTPS","SMTP","USB"],a:1,e:"HTTP es el protocolo de la web; HTTPS es su versión segura."},
+{b:1,t:"mc",s:"internet",q:"¿Qué significa la S de HTTPS?",o:["Que la web es sencilla","Que la conexión es segura y los datos van cifrados","Que es una web española","Que el servidor es pequeño"],a:1,e:"S = seguro. Fíjate en el candado 🔒 de la barra de direcciones."},
+{b:1,t:"mc",s:"internet",q:"¿Para qué usan las cookies los navegadores?",o:["Para acelerar el procesador","Para guardar datos que permiten a la web recordarte (sesión, idioma, carrito…)","Para borrar virus","Para cargar las imágenes"],a:1,e:"Las cookies guardan información en tu navegador para recordarte… y también para saber qué te interesa."},
+{b:1,t:"mc",s:"internet",q:"¿Qué es una URL?",o:["Un tipo de imagen","La dirección exacta de una página o archivo en Internet","Un lenguaje de programación","El nombre del servidor"],a:1,e:"URL = localizador uniforme de recursos: la dirección completa de algo en la web."},
+{b:1,t:"mc",s:"internet",q:"En la URL https://www.ejemplo.es/clase/index.html, ¿qué parte es el dominio?",o:["https","/clase/","ejemplo.es","index.html"],a:2,e:"El dominio es el nombre de la web; .es indica España."},
+{b:1,t:"mc",s:"internet",q:"En una URL, ¿qué indica la parte que empieza por # (por ejemplo #inicio)?",o:["El protocolo","Una zona concreta dentro de la página (ancla)","La contraseña","El país"],a:1,e:"El ancla te lleva a un punto concreto de la página."},
+{b:1,t:"mc",s:"internet",q:"¿Qué terminación de dominio suelen usar las organizaciones sin ánimo de lucro?",o:[".com",".gov",".org",".edu"],a:2,e:".org = organizaciones; .com = empresas; .gov = gobierno; .edu = educación."},
+{b:1,t:"mc",s:"internet",q:"¿Qué es una dirección IP?",o:["El nombre de una web, como google.com","Un número que identifica a cada aparato conectado a Internet","Una contraseña para entrar en Internet","Un tipo de navegador"],a:1,e:"Es como la dirección de tu casa: sirve para que los datos sepan adónde llegar."},
+{b:1,t:"mc",s:"internet",q:"¿Cuál de estas es una dirección IPv4 válida?",o:["192.168.1.25","192.168.1.300","www.192.es","192-168-1-25"],a:0,e:"IPv4 son 4 números del 0 al 255 separados por puntos. 300 se pasa de 255."},
+{b:1,t:"mc",s:"internet",q:"¿Qué hace el DNS?",o:["Cifra la conexión","Traduce el nombre de una web (dominio) a su dirección IP","Guarda las cookies","Crea páginas web"],a:1,e:"Es como la agenda del móvil: traduce un nombre en un número."},
+{b:1,t:"mc",s:"internet",q:"¿Para qué sirve el protocolo FTP?",o:["Para enviar correos","Para subir y descargar archivos de un servidor","Para traducir nombres en IP","Para ver vídeos"],a:1,e:"FTP transfiere archivos. SMTP envía correos y DNS traduce nombres a IP."},
+{b:1,t:"mc",s:"internet",q:"¿Qué protocolo se usa para ENVIAR correos electrónicos?",o:["SMTP","HTTP","DNS","FTP"],a:0,e:"SMTP es el protocolo del correo saliente."},
+{b:1,t:"mc",s:"internet",q:"¿Qué tipo de servidor guarda muchas webs pequeñas en el mismo ordenador?",o:["Dedicado","Compartido","Local","De correo"],a:1,e:"En un servidor compartido muchas webs se reparten la misma máquina. Es barato."},
+{b:1,t:"mc",s:"internet",q:"Una tienda online enorme quiere un ordenador entero solo para su web. ¿Qué servidor necesita?",o:["Compartido","Dedicado","Local","Ninguno"],a:1,e:"El servidor dedicado es solo para una web: potente pero caro."},
+{b:1,t:"mc",s:"internet",q:"¿Cómo trabajamos en clase con nuestras páginas?",o:["En un servidor dedicado","En la nube de Netflix","En local: en nuestro propio ordenador","En un servidor de correo"],a:2,e:"Abrimos el archivo en nuestro ordenador: solo lo vemos nosotros."},
+
+/* ===== 2 · Partes, lenguajes y herramientas ===== */
+{b:2,t:"mc",s:"estructura",q:"¿En qué parte de una web suelen estar el logo y el nombre del sitio?",o:["Pie (footer)","Cuerpo (body)","Cabecera (header)","En ninguna"],a:2,e:"La cabecera es la parte superior que identifica la web."},
+{b:2,t:"mc",s:"estructura",q:"¿Qué suele haber en el pie (footer) de una web?",o:["El vídeo principal","El copyright, el contacto y el aviso legal","El buscador de Google","El título del artículo"],a:1,e:"El pie es la parte de abajo: ©, contacto, aviso legal, redes sociales…"},
+{b:2,t:"mc",s:"estructura",q:"¿Qué parte de la web cambia de una página a otra?",o:["La cabecera","El cuerpo (contenido principal)","El pie","El logo"],a:1,e:"Cabecera y pie se repiten; el cuerpo es el contenido de cada página."},
+{b:2,t:"mc",s:"lenguajes",q:"¿Qué lenguaje se encarga de la ESTRUCTURA de una página?",o:["HTML","CSS","JavaScript","Flash"],a:0,e:"HTML es el esqueleto."},
+{b:2,t:"mc",s:"lenguajes",q:"¿Qué lenguaje se encarga del ASPECTO (colores, letras, tamaños)?",o:["XML","CSS","HTML","Python"],a:1,e:"CSS es «la ropa» de la página."},
+{b:2,t:"mc",s:"lenguajes",q:"¿Qué lenguaje da COMPORTAMIENTO (botones que reaccionan, juegos…)?",o:["CSS","XML","JavaScript","HTML"],a:2,e:"JavaScript son los «músculos» de la web."},
+{b:2,t:"mc",s:"lenguajes",q:"¿Por qué ya no se usa Flash?",o:["Porque era muy caro","Dejó de funcionar en 2020 por problemas de seguridad","Porque solo funcionaba en móviles","Porque no tenía colores"],a:1,e:"Flash se retiró en 2020; lo sustituyen HTML5, CSS y JavaScript."},
+{b:2,t:"mc",s:"lenguajes",q:"¿Para qué sirve XML?",o:["Para dibujar animaciones","Para guardar y compartir datos de forma ordenada","Para poner colores","Para subir archivos"],a:1,e:"XML no dibuja páginas: organiza datos."},
+{b:2,t:"mc",s:"lenguajes",q:"¿Cuál de estos es un editor visual (WYSIWYG)?",o:["Visual Studio Code","Google Sites","FileZilla","Firefox"],a:1,e:"En Google Sites arrastras y sueltas sin escribir código."},
+{b:2,t:"mc",s:"lenguajes",q:"¿Qué tecla abre las herramientas de desarrollador del navegador?",o:["F1","F5","F12","Esc"],a:2,e:"F12 (o clic derecho → Inspeccionar) muestra el código de cualquier web."},
+{b:2,t:"mc",s:"lenguajes",q:"¿Qué herramienta usamos para diseñar el logo de nuestra web?",o:["Canva","FileZilla","VS Code","Notepad++"],a:0,e:"Canva es una herramienta de diseño gráfico."},
+
+/* ===== 3 · VS Code y Drive ===== */
+{b:3,t:"mc",s:"vscode",q:"En VS Code, ¿qué escribes para que aparezca el esqueleto HTML completo?",o:["html + Enter","! + Tab","Ctrl + S","#esqueleto"],a:1,e:"Es un atajo de Emmet: ! y después Tab o Enter."},
+{b:3,t:"mc",s:"vscode",q:"La pestaña de tu archivo en VS Code tiene un punto blanco ⚪. ¿Qué significa?",o:["Que hay un error","Que el archivo no está guardado","Que está en Drive","Que está terminado"],a:1,e:"Pulsa Ctrl + S para guardar y el punto desaparece."},
+{b:3,t:"mc",s:"vscode",q:"Has cambiado el código y guardado. ¿Qué tecla pulsas en el navegador para ver el cambio?",o:["F5","F12","Ctrl + Z","Tab"],a:0,e:"F5 recarga la página."},
+{b:3,t:"mc",s:"vscode",q:"¿Cuál es un nombre de archivo correcto para tu página?",o:["Mi Página Ñoña.html","mi_pagina.html","mi pagina.txt","MI-PÁGINA.HTML "],a:1,e:"Minúsculas, sin espacios, sin tildes ni ñ y terminado en .html."},
+{b:3,t:"mc",s:"vscode",q:"¿Por qué guardamos el trabajo en Google Drive?",o:["Porque VS Code no deja guardar","Porque en los ordenadores de EducaAndOS los archivos se pueden borrar","Porque Drive hace la página por nosotros","Porque es obligatorio para usar Firefox"],a:1,e:"Drive es lo único seguro: descargas al empezar y subes al terminar."},
+{b:3,t:"mc",s:"vscode",q:"Abres tu reto4.html dentro de Google Drive y solo ves el código. ¿Qué haces?",o:["Lo borro y empiezo otra vez","Lo descargo y lo abro con Firefox","Le cambio la extensión a .txt","Pulso F12 en Drive"],a:1,e:"Drive solo muestra el texto. Para ver la página hay que descargarla."},
+{b:3,t:"mc",s:"vscode",q:"Al subir reto4.html a Drive te avisa de que ya existe. ¿Qué eliges?",o:["Mantener ambos archivos","Reemplazar el archivo existente","Cancelar siempre","Cambiar el nombre a reto4(1).html"],a:1,e:"Reemplazar evita las copias reto4(1).html, reto4(2).html…"},
+{b:3,t:"mc",s:"vscode",q:"Descargas tu carpeta entera de Drive y te da un archivo .zip. ¿Qué haces?",o:["Lo abro con VS Code tal cual","Clic derecho → Extraer aquí","Lo vuelvo a subir","Lo renombro a .html"],a:1,e:"El .zip es un archivo comprimido: hay que extraerlo."},
+{b:3,t:"mc",s:"vscode",q:"¿Cuándo debes subir tu trabajo a Drive?",o:["Al final del trimestre","Al final de cada clase","Solo si el profesor lo pide","Nunca, se guarda solo"],a:1,e:"Los últimos 5 minutos de cada clase: subir a Drive."},
+
+/* ===== 4 · El esqueleto HTML ===== */
+{b:4,t:"mc",s:"esqueleto",q:"¿Qué va SIEMPRE en la primera línea de un documento HTML5?",o:["<html>","<!DOCTYPE html>","<head>","<title>"],a:1,e:"<!DOCTYPE html> avisa al navegador de que es HTML5."},
+{b:4,t:"mc",s:"esqueleto",q:"¿Qué etiqueta hace que se vean bien las tildes y la ñ?",o:["<title>","<meta charset=\"utf-8\">","<body>","<p>"],a:1,e:"Va dentro de <head>. Sin ella aparecen símbolos raros."},
+{b:4,t:"mc",s:"esqueleto",q:"¿Dónde aparece el texto que escribes dentro de <title>?",o:["En el título grande de la página","En la pestaña del navegador","En el pie de página","En ningún sitio"],a:1,e:"El <title> se ve en la pestaña."},
+{b:4,t:"mc",s:"esqueleto",q:"¿Dónde se escribe todo lo que se VE en la página?",o:["Dentro de <head>","Dentro de <title>","Dentro de <body>","Antes de <!DOCTYPE>"],a:2,e:"El cuerpo (<body>) contiene todo lo visible."},
+{b:4,t:"mc",s:"esqueleto",q:"¿Qué indica lang=\"es\" en la etiqueta <html>?",o:["Que la página está en español","Que es una web de España","Que usa letra española","Nada"],a:0,e:"lang indica el idioma del contenido."},
+{b:4,t:"comp",s:"esqueleto",q:"¿Qué etiqueta falta para cerrar el párrafo?",c:"<p>Hola, mundo ____",o:["<p>","</p>","<p/>","<\\p>"],a:1,e:"La etiqueta que cierra lleva una barra: </p>."},
+{b:4,t:"err",s:"esqueleto",q:"¿Dónde está el error?",c:"<p>Me gusta el <b>fútbol</p></b>",o:["Falta <html>","Las etiquetas se cierran en el orden equivocado","<b> no existe","No hay ningún error"],a:1,e:"Regla de las muñecas rusas: abres <p><b> y cierras </b></p>."},
+{b:4,t:"mc",s:"esqueleto",q:"¿Cómo se escribe un comentario que el navegador no muestra?",o:["// comentario","<!-- comentario -->","# comentario","<comment>comentario</comment>"],a:1,e:"En HTML los comentarios van entre <!-- y -->."},
+{b:4,t:"err",s:"esqueleto",q:"Esta página muestra «EspaÃ±a» en lugar de «España». ¿Qué le falta?",c:"<head>\n  <title>España</title>\n</head>",o:["<meta charset=\"utf-8\">","<body>","Un <h1>","lang=\"es\""],a:0,e:"Sin meta charset=utf-8 las tildes y la ñ se ven mal."},
+
+/* ===== 5 · Formato del texto ===== */
+{b:5,t:"mc",s:"formato",q:"¿Cuál es el título más grande?",o:["<h6>","<h1>","<title>","<big>"],a:1,e:"Los títulos van de <h1> (el mayor) a <h6> (el menor)."},
+{b:5,t:"mc",s:"formato",q:"¿Qué etiqueta hace un salto de línea (y no se cierra)?",o:["<p>","<br>","<hr>","<li>"],a:1,e:"<br> baja de línea dentro de un párrafo."},
+{b:5,t:"ver",s:"formato",q:"¿Qué se ve en el navegador?",c:"<p>Hola\nmundo</p>",o:["Hola<br>mundo","Hola mundo","<b>Hola mundo</b>","Hola"],a:1,e:"HTML ignora los Enter del código. Para bajar de línea hace falta <br>."},
+{b:5,t:"ver",s:"formato",q:"¿Qué se ve en el navegador?",c:"<p>H<sub>2</sub>O</p>",o:["H<sup>2</sup>O","H<sub>2</sub>O","H2O","<b>H2O</b>"],a:1,e:"<sub> pone el texto como subíndice, abajo."},
+{b:5,t:"ver",s:"formato",q:"¿Qué se ve en el navegador?",c:"<p>Área: 25 m<sup>2</sup></p>",o:["Área: 25 m<sub>2</sub>","Área: 25 m2","Área: 25 m<sup>2</sup>","<i>Área: 25 m2</i>"],a:2,e:"<sup> pone el texto como superíndice, arriba."},
+{b:5,t:"ver",s:"formato",q:"¿Qué se ve en el navegador?",c:"<p>Soy <b>muy</b> <i>fan</i></p>",o:["Soy <b>muy</b> <i>fan</i>","Soy <i>muy</i> <b>fan</b>","<b>Soy muy fan</b>","Soy <u>muy</u> fan"],a:0,e:"<b> = negrita, <i> = cursiva."},
+{b:5,t:"err",s:"formato",q:"Este estilo no funciona. ¿Por qué?",c:"<p style=\"color=red, font-size:20\">Hola</p>",o:["style no existe","Hay que usar : entre propiedad y valor, ; entre propiedades y poner px","El color red no existe","Falta cerrar el <p>"],a:1,e:"Correcto: style=\"color: red; font-size: 20px;\""},
+{b:5,t:"comp",s:"formato",q:"¿Qué propiedad centra el texto?",c:"<h1 style=\"____: center;\">Título</h1>",o:["align","text-align","center","position"],a:1,e:"text-align puede ser left, center, right o justify."},
+{b:5,t:"comp",s:"formato",q:"¿Qué propiedad pone el fondo amarillo a toda la página?",c:"<body style=\"____: yellow;\">",o:["color","background-color","bgcolor","font-color"],a:1,e:"color cambia el texto; background-color, el fondo."},
+{b:5,t:"mc",s:"formato",q:"¿Qué propiedad cambia el TIPO de letra?",o:["font-size","font-family","text-align","color"],a:1,e:"font-family: Arial, Georgia, 'Comic Sans MS'…"},
+{b:5,t:"ver",s:"formato",q:"¿Qué se ve en el navegador?",c:"<p style=\"color: red;\">Peligro</p>",o:["<span style='color:red'>Peligro</span>","<span style='background:red;color:#fff'>Peligro</span>","Peligro","<b>Peligro</b>"],a:0,e:"color cambia el color de las letras, no del fondo."},
+{b:5,t:"mc",s:"formato",q:"¿Por qué no usamos <font color=\"red\">?",o:["Porque no existe","Porque está obsoleta: ahora se usa style (y CSS)","Porque solo funciona en móviles","Porque no deja poner colores"],a:1,e:"<font> y bgcolor son antiguas; usamos style, el primer paso hacia CSS."},
+
+/* ===== 6 · Listas, enlaces, imágenes y tablas ===== */
+{b:6,t:"mc",s:"mas",q:"¿Qué etiqueta crea una lista NUMERADA?",o:["<ul>","<li>","<ol>","<dl>"],a:2,e:"<ol> = lista ordenada (numerada). <ul> = lista con puntos."},
+{b:6,t:"ver",s:"mas",q:"¿Qué se ve en el navegador?",c:"<ul>\n  <li>Pan</li>\n  <li>Leche</li>\n</ul>",o:["<ol><li>Pan</li><li>Leche</li></ol>","<ul><li>Pan</li><li>Leche</li></ul>","Pan Leche","<b>Pan</b><br><b>Leche</b>"],a:1,e:"<ul> pone puntos delante de cada <li>."},
+{b:6,t:"mc",s:"mas",q:"En una lista de definiciones <dl>, ¿qué etiqueta lleva la definición?",o:["<dt>","<dd>","<li>","<def>"],a:1,e:"<dt> = término, <dd> = definición."},
+{b:6,t:"mc",s:"mas",q:"¿Qué etiqueta dibuja una línea horizontal?",o:["<br>","<line>","<hr>","<h1>"],a:2,e:"<hr> = horizontal rule (línea horizontal)."},
+{b:6,t:"mc",s:"mas",q:"¿Cuál es la forma correcta de escribir un enlace?",o:["<a href=\"https://wikipedia.org\">Wikipedia</a>","<link>Wikipedia</link>","<a src=\"wikipedia.org\">","<url>Wikipedia</url>"],a:0,e:"Los enlaces son <a> con el atributo href."},
+{b:6,t:"comp",s:"mas",q:"¿Qué atributo hace que el enlace se abra en una pestaña nueva?",c:"<a href=\"https://es.wikipedia.org\" ____>Wikipedia</a>",o:["new=\"tab\"","target=\"_blank\"","open=\"new\"","tab=\"_new\""],a:1,e:"target=\"_blank\" abre el enlace en una pestaña nueva."},
+{b:6,t:"comp",s:"mas",q:"¿Qué atributo indica qué imagen se muestra?",c:"<img ____=\"logo.png\" alt=\"Mi logo\">",o:["href","src","link","file"],a:1,e:"src (source) es la ruta de la imagen."},
+{b:6,t:"mc",s:"mas",q:"¿Para qué sirve el atributo alt de una imagen?",o:["Para cambiar su tamaño","Para describirla a quien no puede verla","Para ponerle borde","Para enlazarla"],a:1,e:"alt describe la imagen: lo leen los lectores de pantalla y aparece si la imagen no carga."},
+{b:6,t:"err",s:"mas",q:"La imagen sale rota. El archivo de la carpeta se llama logo.png. ¿Por qué?",c:"<img src=\"Logo.PNG\" alt=\"Logo\">",o:["Falta width","El nombre no es exactamente igual (mayúsculas)","alt está mal","Las imágenes no funcionan en local"],a:1,e:"src tiene que coincidir letra a letra con el nombre del archivo."},
+{b:6,t:"mc",s:"mas",q:"En una tabla, ¿qué etiqueta crea una FILA?",o:["<td>","<th>","<tr>","<table>"],a:2,e:"<tr> = table row (fila)."},
+{b:6,t:"mc",s:"mas",q:"¿Qué etiqueta crea una celda de ENCABEZADO (en negrita y centrada)?",o:["<td>","<th>","<tr>","<head>"],a:1,e:"<th> = table header. Las celdas normales son <td>."},
+{b:6,t:"ver",p:1,s:"mas",q:"¿Cuántas filas y columnas tiene esta tabla?",c:"<table border=\"1\">\n  <tr><td>A</td><td>B</td><td>C</td></tr>\n  <tr><td>D</td><td>E</td><td>F</td></tr>\n</table>",o:["3 filas y 2 columnas","2 filas y 3 columnas","6 filas","1 fila y 6 columnas"],a:1,e:"Cada <tr> es una fila (2) y cada <td> de una fila es una columna (3)."},
+{b:6,t:"err",s:"mas",q:"La tabla sale descolocada. ¿Qué falla?",c:"<tr>\n  <td>A</td>\n  <td>B</td>\n<tr>",o:["Falta border","La fila no se cierra: debe acabar en </tr>","<td> debe ser <th>","Sobra una celda"],a:1,e:"Cada <tr> se cierra con </tr>."},
+
+/* ===== 7 · Seguridad y licencias ===== */
+{b:7,t:"mc",s:"mas",q:"¿Puedo usar en mi web cualquier imagen que encuentre en Google?",o:["Sí, si está en Internet es gratis","Solo si es pequeña","No: hay que respetar su licencia y los derechos de autor","Sí, si le cambio el nombre"],a:2,e:"Las imágenes tienen autor. Usa imágenes con licencia libre o propias."},
+{b:7,t:"mc",s:"mas",q:"¿Dónde puedes buscar imágenes con licencia libre?",o:["Pixabay, Unsplash o Wikimedia Commons","En cualquier periódico","En Instagram","En capturas de películas"],a:0,e:"Esos bancos de imágenes ofrecen fotos de uso libre (a veces piden citar al autor)."},
+{b:7,t:"mc",s:"internet",q:"¿Qué puede saber una web gracias a tu IP pública?",o:["Tu contraseña","Más o menos desde qué ciudad te conectas","Tu nombre completo","Tus fotos del móvil"],a:1,e:"Por eso en Internet nunca eres totalmente anónimo."},
+{b:7,t:"mc",s:"internet",q:"Vas a escribir tu contraseña en una web. ¿Qué debes comprobar en la barra de direcciones?",o:["Que tenga muchos colores","Que empiece por https y tenga el candado 🔒","Que termine en .html","Que no tenga www"],a:1,e:"HTTPS cifra los datos: nadie puede leerlos por el camino."},
+{b:7,t:"mc",s:"internet",q:"¿Por qué las cookies afectan a tu privacidad?",o:["Porque rompen el ordenador","Porque pueden registrar qué visitas y qué te interesa","Porque gastan batería","No afectan nada"],a:1,e:"Algunas cookies sirven para seguirte y mostrarte publicidad personalizada."}
+];
+
+/* ---------- TEST: práctica y examen ---------- */
+const KEYHASH="ue0c4y", SALT="salHTML3|", EXAM_N=20, EXAM_MIN=20;
+const djb=s=>{let x=5381;for(const c of s)x=((x<<5)+x+c.charCodeAt(0))|0;return (x>>>0).toString(36);};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const TYPES={mc:"🧠 Teoría",ver:"👀 ¿Qué se ve?",err:"🐞 Encuentra el error",comp:"🧩 Completa"};
+function optHTML(q,i){return q.t==="ver"&&!q.p?'<span class="mini">'+q.o[i]+'</span>':esc(q.o[i]);}
+function qHTML(q,name,num){
+  // opciones barajadas guardando la correcta
+  const ord=shuffle(q.o.map((_,i)=>i));
+  return {ord,html:
+    '<div class="qmeta"><span class="chip">'+TYPES[q.t]+'</span><span class="chip ghost">'+BLOCKS[q.b-1]+'</span></div>'+
+    '<p>'+(num?num+'. ':'')+esc(q.q)+'</p>'+
+    (q.c?'<pre class="qcode"><code>'+hl(q.c)+'</code></pre>':'')+
+    '<div class="opts">'+ord.map(i=>'<label class="opt"><input type="radio" name="'+name+'" value="'+i+'"> '+optHTML(q,i)+'</label>').join("")+'</div>'};
+}
+
+/* pestañas */
+let examOn=false;
+$$("#tTabs button").forEach(b=>b.onclick=()=>{if(examOn)return;$$("#tTabs button").forEach(x=>x.classList.toggle("on",x===b));$("#tPrac").style.display=b.dataset.tab==="prac"?"":"none";$("#tExam").style.display=b.dataset.tab==="exam"?"":"none";});
+
+/* ---------- PRÁCTICA ---------- */
+$("#pBlock").innerHTML='<option value="0">🎲 Mezcla de todo ('+BANK.length+')</option>'+BLOCKS.map((n,i)=>'<option value="'+(i+1)+'">'+(i+1)+'. '+n+' ('+BANK.filter(q=>q.b===i+1).length+')</option>').join("");
+const ps=store.get("practice",{ok:0,tot:0,best:0});let streak=0,pQueue=[],pCur=null;
+function paintPS(){$("#pOk").textContent=ps.ok;$("#pTot").textContent=ps.tot;$("#pStreak").textContent=streak;$("#pBest").textContent=ps.best;}
+function pNext(){
+  if(!pQueue.length){const b=+$("#pBlock").value;pQueue=shuffle(BANK.filter(q=>!b||q.b===b));}
+  pCur=pQueue.pop();const r=qHTML(pCur,"pq");
+  $("#pCard").innerHTML='<div class="q">'+r.html+'<div class="exp"></div><div class="pbtns" style="display:none;margin-top:10px;gap:8px;flex-wrap:wrap"><button class="btn small ghost" data-go="'+pCur.s+'">📖 Repasar en la teoría</button><button class="btn small" id="pNextBtn">Siguiente ➜</button></div></div>';
+  $$("#pCard input").forEach(inp=>inp.onchange=()=>{
+    const ok=+inp.value===pCur.a, box=$("#pCard .q");
+    box.classList.add(ok?"right":"wrong");$$("#pCard input").forEach(x=>{x.disabled=true;if(+x.value===pCur.a)x.parentElement.classList.add("good");});
+    if(!ok)inp.parentElement.classList.add("bad");
+    box.querySelector(".exp").innerHTML=(ok?"✅ <b>¡Correcto!</b> ":"❌ <b>No es correcta.</b> ")+esc(pCur.e);
+    ps.tot++;if(ok){ps.ok++;streak++;if(streak>ps.best){ps.best=streak;if(streak>=5)toast("🏆 ¡Nuevo récord: "+streak+" seguidas!");}}else streak=0;
+    store.set("practice",ps);paintPS();
+    box.querySelector(".pbtns").style.display="flex";$("#pNextBtn").onclick=pNext;$("#pNextBtn").focus();
+    if(!done.test){done.test=true;store.set("done",done);paintProgress();}
+  });
+}
+$("#pStart").onclick=()=>{pQueue=[];streak=0;paintPS();pNext();};
+$("#pBlock").onchange=()=>{pQueue=[];};
+paintPS();
+
+/* ---------- EXAMEN ---------- */
+let eSet=[],eOrd=[],eLeft=0,eTimer=null,eOuts=0,eStartT=0,eWho="",eIgnore=false;
+const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+function nowStr(d){return d.toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric"})+", "+d.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});}
+function codeFor(name,ok,outs,date){return djb(SALT+name.trim().toLowerCase()+"|"+ok+"|"+outs+"|"+date).toUpperCase().slice(-6).padStart(6,"0");}
+$("#eGo").onclick=()=>{
+  const isPair=modes.test===2, n1=$("#qName").value.trim(), n2=$("#qName2").value.trim();
+  if(!n1){toast("✏️ Escribe tu nombre primero");$("#qName").focus();return;}
+  if(isPair&&!n2){toast("✏️ Escribe el nombre de tu compañero/a");$("#qName2").focus();return;}
+  if(djb(SALT+$("#eKey").value.trim())!==KEYHASH){toast("🔑 Clave incorrecta");$("#eKey").value="";return;}
+  eWho=isPair?n1+" y "+n2:n1;
+  eSet=shuffle(BANK).slice(0,EXAM_N);
+  const parts=eSet.map((q,i)=>qHTML(q,"e"+i,i+1));eOrd=parts.map(p=>p.ord);
+  $("#eQuiz").innerHTML=parts.map((p,i)=>'<div class="q" data-i="'+i+'">'+p.html+'<div class="exp"></div></div>').join("");
+  $$("#eQuiz input").forEach(x=>x.onchange=()=>{$("#eDone").textContent=$$("#eQuiz .q").filter(b=>b.querySelector("input:checked")).length;});
+  $("#eWho").textContent=(isPair?"👥 ":"👤 ")+eWho+($("#qGroup").value.trim()?" · "+$("#qGroup").value.trim():"");
+  $("#eKey").value="";eOuts=0;eLeft=EXAM_MIN*60;eStartT=Date.now();$("#eDone").textContent="0";$("#eClock").textContent=fmt(eLeft);
+  examOn=true;document.body.classList.add("exam");
+  $("#eStart").style.display="none";$("#eEnd").style.display="none";$("#eRun").style.display="";
+  window.scrollTo(0,0);
+  eTimer=setInterval(()=>{eLeft--;$("#eClock").textContent=fmt(Math.max(eLeft,0));if(eLeft===60)toast("⏰ ¡Queda 1 minuto!");if(eLeft<=60)$(".eclock").classList.add("hurry");if(eLeft<=0)finishExam(true);},1000);
+};
+function outEvent(){if(!examOn||eIgnore)return;eOuts++;toast("⚠️ Has salido del examen. Queda registrado ("+eOuts+")");}
+document.addEventListener("visibilitychange",()=>{if(document.hidden)outEvent();});
+window.addEventListener("blur",()=>{if(examOn&&!document.hidden)outEvent();});
+window.addEventListener("beforeunload",e=>{if(examOn){e.preventDefault();e.returnValue="";}});
+$("#eSend").onclick=()=>{
+  const blank=$$("#eQuiz .q").filter(b=>!b.querySelector("input:checked")).length;
+  eIgnore=true;const go2=!blank||confirm("Te quedan "+blank+" preguntas sin contestar. ¿Entregar de todas formas?");setTimeout(()=>{eIgnore=false;},300);
+  if(!go2)return;
+  finishExam(false);
+};
+function finishExam(auto){
+  clearInterval(eTimer);examOn=false;$(".eclock").classList.remove("hurry");
+  let ok=0;
+  $$("#eQuiz .q").forEach((b,i)=>{const c=b.querySelector("input:checked");const r=c&&+c.value===eSet[i].a;if(r)ok++;b.classList.add(r?"right":"wrong");
+    b.querySelectorAll("input").forEach(x=>{x.disabled=true;if(+x.value===eSet[i].a)x.parentElement.classList.add("good");});if(c&&!r)c.parentElement.classList.add("bad");
+    b.querySelector(".exp").innerHTML=(r?"✅ ":c?"❌ ":"⬜ Sin contestar. ")+esc(eSet[i].e);});
+  const nota=(Math.round(ok/EXAM_N*100)/10).toFixed(1).replace(".",","), date=nowStr(new Date()), mins=Math.round((Date.now()-eStartT)/60000);
+  const code=codeFor(eWho,ok,eOuts,date);
+  $("#eResult").innerHTML='<div>'+(modes.test===2?"👥 En pareja: ":"👤 ")+esc(eWho)+($("#qGroup").value.trim()?" · "+esc($("#qGroup").value.trim()):"")+'</div>'+
+    '<div class="big">'+nota+' / 10</div><div>'+ok+' de '+EXAM_N+' aciertos · '+date+' · '+mins+' min'+(auto?' · ⏱ tiempo agotado':'')+'</div>'+
+    '<div class="outs '+(eOuts?'warnout':'')+'">'+(eOuts?'⚠️ Salidas de la pantalla del examen: '+eOuts:'✅ Sin salidas de la pantalla del examen')+'</div>'+
+    '<div class="vcode">Código de verificación: <b>'+code+'</b></div>';
+  $("#eReview").innerHTML="";$("#eReview").appendChild($("#eQuiz"));
+  $("#eRun").style.display="none";$("#eEnd").style.display="";
+  store.set("lastExam",{who:eWho,ok,nota,date,outs:eOuts,code});
+  done.test=true;store.set("done",done);paintProgress();window.scrollTo(0,0);
+}
+$("#eExit").onclick=()=>{document.body.classList.remove("exam");$("#eRun").insertBefore($("#eQuiz"),$("#eSend"));$("#eQuiz").innerHTML="";$("#eEnd").style.display="none";$("#eStart").style.display="";};
+
+/* verificación del profesor */
+$("#vGo").onclick=()=>{
+  if(djb(SALT+$("#vKey").value.trim())!==KEYHASH){$("#vRes").textContent="🔑 Clave incorrecta";return;}
+  const c=codeFor($("#vName").value,$("#vOk").value.trim(),$("#vOut").value.trim(),$("#vDate").value.trim());
+  $("#vRes").innerHTML=c===$("#vCode").value.trim().toUpperCase()?'<span style="color:var(--ok)">✅ Código válido</span>':'<span style="color:var(--bad)">❌ No coincide (revisa los datos o la captura está modificada)</span>';
+};
+
+/* ---------- imprimir ficha ---------- */
+const clearPrint=()=>document.body.classList.remove("print-ficha","pf-1","pf-2");
+$$("[data-print]").forEach(b=>b.onclick=()=>{const n=b.dataset.print;document.body.classList.add("print-ficha");if(n!=="0")document.body.classList.add("pf-"+n);window.print();setTimeout(clearPrint,500);});
+window.addEventListener("afterprint",clearPrint);
+
+
+/* ---------- modo individual / pareja ---------- */
+const modes=store.get("modes",{});
+let tmr=null;
+function pairHTML(k){
+  return '<div class="pairpanel">'+
+  '<div class="roles"><div data-role="0">🧑‍✈️ <b>Piloto</b>: escribe en el teclado.<input type="text" placeholder="Nombre" data-pn="0"></div>'+
+  '<div data-role="1">🧭 <b>Copiloto</b>: dicta, revisa y busca en la chuleta. ¡No toca el teclado!<input type="text" placeholder="Nombre" data-pn="1"></div></div>'+
+  '<div class="timer"><span class="clock">10:00</span><button class="btn small" data-t="go">▶ Empezar turnos de 10 min</button><button class="btn small ghost" data-t="swap">🔄 Cambiar ya</button><button class="btn small ghost" data-t="stop">⏹ Parar</button></div>'+
+  '<div class="tip" style="margin-bottom:0"><b>☁️ Drive en pareja:</b> uno de los dos crea la carpeta <code class="inl">web_ana_garcia_luis_perez</code> y la comparte con su compañero (clic derecho → <b>Compartir</b> → su correo → <b>Editor</b>). Así, si uno falta, el otro tiene el trabajo.<br>'+
+  '<b>📝 En el código:</b> la primera línea debajo de <code class="inl">&lt;body&gt;</code> es <code class="inl">&lt;!-- Autores: Ana García y Luis Pérez --&gt;</code>.<br>'+
+  '<b>📤 Entrega:</b> <b>los dos</b> entregáis en Classroom el mismo archivo (Añadir → Google Drive), así cada uno tiene su nota.</div></div>';
+}
+$$(".modebox").forEach(box=>{
+  const k=box.dataset.mode, sec=box.closest("section");
+  box.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center"><b>¿Cómo vais a trabajar?</b><div class="seg"><button data-m="1">👤 Individual</button><button data-m="2">👥 En pareja</button></div></div>'+(box.dataset.simple?"":pairHTML(k));
+  const paint=()=>{const pair=modes[k]===2;sec.classList.toggle("pair",pair);box.querySelectorAll(".seg button").forEach(b=>b.classList.toggle("on",+b.dataset.m===(pair?2:1)));};
+  box.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{modes[k]=+b.dataset.m;store.set("modes",modes);paint();});
+  paint();
+  if(box.dataset.simple) return;
+  const names=store.get("pairnames_"+k,["",""]);
+  box.querySelectorAll("[data-pn]").forEach(i=>{i.value=names[i.dataset.pn]||"";i.oninput=()=>{names[i.dataset.pn]=i.value;store.set("pairnames_"+k,names);};});
+  const clock=box.querySelector(".clock"), roles=box.querySelectorAll("[data-role]");
+  let pilot=0,left=600;
+  const show=()=>{clock.textContent=String(Math.floor(left/60)).padStart(2,"0")+":"+String(left%60).padStart(2,"0");roles.forEach((r,i)=>r.classList.toggle("now",i===0));};
+  const swap=()=>{
+    const ins=box.querySelectorAll("[data-pn]");const a=ins[0].value;ins[0].value=ins[1].value;ins[1].value=a;
+    names[0]=ins[0].value;names[1]=ins[1].value;store.set("pairnames_"+k,names);
+    left=600;show();box.classList.remove("flash");void box.offsetWidth;box.classList.add("flash");
+    toast("🔄 ¡Cambio de roles! "+(ins[0].value||"El nuevo piloto")+" al teclado");
+  };
+  box.querySelector('[data-t="go"]').onclick=()=>{clearInterval(tmr);left=600;show();tmr=setInterval(()=>{left--;if(left<=0)swap();else show();},1000);toast("▶ ¡A programar!");};
+  box.querySelector('[data-t="swap"]').onclick=swap;
+  box.querySelector('[data-t="stop"]').onclick=()=>{clearInterval(tmr);left=600;show();};
+  show();
+});
+
+/* ---------- arranque ---------- */
+paintProgress();
+go(location.hash.slice(1)||"inicio");
+})();
+</script>
+</body>
+</html>
